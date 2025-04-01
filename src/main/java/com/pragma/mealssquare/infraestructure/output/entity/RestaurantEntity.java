@@ -1,21 +1,45 @@
-package com.pragma.mealssquare.domain.model;
+package com.pragma.mealssquare.infraestructure.output.entity;
 
-import java.util.List;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
-public class Restaurant {
+@Entity
+@Table(name = "PRG_TBL_RESTAURANT")
+@SequenceGenerator(name = "restaurant_seq", sequenceName = "prg_tbl_restaurant_seq", allocationSize = 1)
+public class RestaurantEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    @Column(name = "idRestaurant")
     private Long idRestaurant;
+
+    @NotBlank(message = "Name restaurant cannot be blank")
+    @Column(name = "nameRestaurant")
     private String nameRestaurant;
+
+    @NotBlank(message = "Address restaurant cannot be blank")
+    @Column(name = "addressRestaurant")
     private String addressRestaurant;
+
+    @NotBlank(message = "Id Owner restaurant cannot be blank")
+    @Column(name = "idOwner")
     private Long idOwner;
+
+    @NotBlank(message = "Phone NumberRestaurant restaurant cannot be blank")
+    @Column(name = "phoneNumberRestaurant")
     private String phoneNumberRestaurant;
+
+    @NotBlank(message = "Url logo restaurant cannot be blank")
+    @Column(name = "urlLogo")
     private String urlLogo;
+
+    @NotBlank(message = "nit restaurant cannot be blank")
+    @Column(name = "nit")
     private String nit;
 
-    public Restaurant() {
+    public RestaurantEntity() {
     }
 
-    public Restaurant(Long idRestaurant, String nameRestaurant, String addressRestaurant, Long idOwner, String phoneNumberRestaurant,
-                      String urlLogo, String nit) {
+    public RestaurantEntity(Long idRestaurant, String nameRestaurant, String addressRestaurant, Long idOwner, String phoneNumberRestaurant, String urlLogo, String nit) {
         this.idRestaurant = idRestaurant;
         this.nameRestaurant = nameRestaurant;
         this.addressRestaurant = addressRestaurant;

@@ -1,9 +1,6 @@
-package com.pragma.mealssquare.domain.model;
+package com.pragma.mealssquare.application.dto;
 
-import java.util.List;
-
-public class Restaurant {
-    private Long idRestaurant;
+public class RestaurantDTOResponse {
     private String nameRestaurant;
     private String addressRestaurant;
     private Long idOwner;
@@ -11,26 +8,16 @@ public class Restaurant {
     private String urlLogo;
     private String nit;
 
-    public Restaurant() {
+    public RestaurantDTOResponse() {
     }
 
-    public Restaurant(Long idRestaurant, String nameRestaurant, String addressRestaurant, Long idOwner, String phoneNumberRestaurant,
-                      String urlLogo, String nit) {
-        this.idRestaurant = idRestaurant;
+    public RestaurantDTOResponse(String nameRestaurant, String addressRestaurant, Long idOwner, String phoneNumberRestaurant, String urlLogo, String nit) {
         this.nameRestaurant = nameRestaurant;
         this.addressRestaurant = addressRestaurant;
         this.idOwner = idOwner;
         this.phoneNumberRestaurant = phoneNumberRestaurant;
         this.urlLogo = urlLogo;
         this.nit = nit;
-    }
-
-    public Long getIdRestaurant() {
-        return idRestaurant;
-    }
-
-    public void setIdRestaurant(Long idRestaurant) {
-        this.idRestaurant = idRestaurant;
     }
 
     public String getNameRestaurant() {
