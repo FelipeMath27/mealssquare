@@ -4,6 +4,7 @@ import com.pragma.mealssquare.domain.api.IRestaurantServicePort;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.usecase.UseCaseRestaurant;
 
+import com.pragma.mealssquare.infraestructure.feign.IUsersMealsSquare;
 import com.pragma.mealssquare.infraestructure.output.mapper.RestaurantEntityMapper;
 import com.pragma.mealssquare.infraestructure.output.repository.IRestaurantRepository;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,8 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public IRestaurantServicePort iRestaurantServicePort(IRestaurantPersistencePort iRestaurantPersistencePort){
-        return new UseCaseRestaurant(iRestaurantPersistencePort);
+    public IRestaurantServicePort iRestaurantServicePort(IRestaurantPersistencePort iRestaurantPersistencePort,
+                                                         IUsersMealsSquare usersMealsSquare){
+        return new UseCaseRestaurant(iRestaurantPersistencePort, usersMealsSquare);
     }
 }
