@@ -58,4 +58,8 @@ public class RestaurantServiceTest {
 
         verify(iRestaurantPersistencePort,times(1)).saveRestaurant(any(Restaurant.class));
     }
+
+    @Test
+    void test_idOwnerRestaurant_isOwner(){
+    }
 }
