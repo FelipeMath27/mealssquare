@@ -22,8 +22,7 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public IRestaurantServicePort iRestaurantServicePort(IRestaurantPersistencePort iRestaurantPersistencePort,
-                                                         IUsersMealsSquare usersMealsSquare){
-        return new UseCaseRestaurant(iRestaurantPersistencePort, usersMealsSquare);
+    public IRestaurantServicePort iRestaurantServicePort(IRestaurantPersistencePort iRestaurantPersistencePort){
+        return new UseCaseRestaurant(iRestaurantPersistencePort);
     }
 }

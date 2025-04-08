@@ -5,5 +5,6 @@ public enum StatusOrder {
     IN_PROGRESS,
     DISPATCHED,
     DELIVERED,
-    REJECTED
+    REJECTED,
+    DISH_READY
 }

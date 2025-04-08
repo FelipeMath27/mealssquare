@@ -1,9 +1,9 @@
 package com.pragma.mealssquare.domain.api;
 
 import com.pragma.mealssquare.domain.model.Restaurant;
-
-import java.util.List;
+import com.pragma.mealssquare.domain.model.Rol;
+import com.pragma.mealssquare.domain.model.User;
 
 public interface IRestaurantServicePort {
-    void saveRestaurants (List<Restaurant> restaurantList, String emailCreatorRestaurant);
+    void saveRestaurants (Restaurant restaurant, User creatorUser, User ownerUser);
 }

@@ -8,7 +8,7 @@ import com.pragma.mealssquare.domain.model.Restaurant;
 import java.util.List;
 
 public interface IRestaurantHandler {
-    void saveListRestaurant(List<RestaurantDTORequest> restaurantDTORequestList, String emailCreator);
+    void saveListRestaurant(RestaurantDTORequest restaurantDTORequest, String emailCreator);
 
     List<RestaurantDTOResponse> getListRestaurantDtoResponses(List<Restaurant> restaurantList);
 }
