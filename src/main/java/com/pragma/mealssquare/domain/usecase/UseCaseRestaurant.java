@@ -3,7 +3,6 @@ package com.pragma.mealssquare.domain.usecase;
 
 import com.pragma.mealssquare.domain.api.IRestaurantServicePort;
 import com.pragma.mealssquare.domain.model.Restaurant;
-import com.pragma.mealssquare.domain.model.TypeRolEnum;
 import com.pragma.mealssquare.domain.model.User;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
@@ -11,12 +10,12 @@ import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 
 import com.pragma.mealssquare.domain.validator.ValidatorClasses;
 import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
-import com.pragma.mealssquare.infraestructure.feign.IUsersMealsSquare;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
+@Slf4j
 public class UseCaseRestaurant implements IRestaurantServicePort {
 
     private static final Logger logger = LoggerFactory.getLogger(UseCaseRestaurant.class);
@@ -29,9 +28,13 @@ public class UseCaseRestaurant implements IRestaurantServicePort {
 
     @Override
     public void saveRestaurants(Restaurant restaurant, User userCreatorRestaurant, User ownerRestaurant) {
+        log.info("The user admini is {}",userCreatorRestaurant.getEmail());
         ValidatorClasses.validateAdminCreator(userCreatorRestaurant);
+        log.info("The owner user is {}",ownerRestaurant.getEmail());
         ValidatorClasses.validateOwner(ownerRestaurant);
-        restaurant.setIdOwnerUser(ownerRestaurant.getIdUser());
+        log.info("The id owner user is {}",ownerRestaurant.getIdUser());
+        restaurant.setIdOwner(ownerRestaurant.getIdUser());
+        log.info("The id owner user is {}",restaurant.getIdOwner());
         processValidateSaveRestaurant(restaurant);
     }
 
