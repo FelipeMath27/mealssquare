@@ -12,4 +12,11 @@ public class ConstantsErrorMessage {
     public static final String INVALID_ROLE = "Invalid role to create de user";
     public static final String IS_NOT_OWNER_ROLE = "Invalid role to create owner restaurant";
 
+    public static final String START_FLOW = "Start flow";
+    public static final String START_VALIDATE_CREATOR_USER = "Start to validate creator user";
+    public static final String START_VALIDATE_OWNER = "Start to validate owner user";
+    public static final String START_PROCESS_TO_VALIDATE_CONDITION = "Start process to validate requirements";
+
+    public static final String CANT_CONNECT_MICROSERVICES = "CAN'T CONNECT TO THE MICROSERVICES";
+
 }

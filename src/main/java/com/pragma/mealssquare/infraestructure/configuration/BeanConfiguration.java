@@ -16,7 +16,8 @@ public class BeanConfiguration {
     private final IRestaurantRepository iRestaurantRepository;
     private final RestaurantEntityMapper restaurantEntityMapper;
 
-    public BeanConfiguration(IRestaurantRepository iRestaurantRepository, RestaurantEntityMapper restaurantEntityMapper) {
+    public BeanConfiguration(IRestaurantRepository iRestaurantRepository,
+                             RestaurantEntityMapper restaurantEntityMapper) {
         this.iRestaurantRepository = iRestaurantRepository;
         this.restaurantEntityMapper = restaurantEntityMapper;
     }
