@@ -12,11 +12,22 @@ public class ConstantsErrorMessage {
     public static final String INVALID_ROLE = "Invalid role to create de user";
     public static final String IS_NOT_OWNER_ROLE = "Invalid role to create owner restaurant";
 
+    /**Category*/
+    public static final String CATEGORY_NOT_FOUND = "Category not found in the system";
+
     public static final String START_FLOW = "Start flow";
     public static final String START_VALIDATE_CREATOR_USER = "Start to validate creator user";
     public static final String START_VALIDATE_OWNER = "Start to validate owner user";
     public static final String START_PROCESS_TO_VALIDATE_CONDITION = "Start process to validate requirements";
 
+    /**Microservices*/
     public static final String CANT_CONNECT_MICROSERVICES = "CAN'T CONNECT TO THE MICROSERVICES";
+
+    /**Price dish*/
+    public static final double MIN_PRICE_DISH = 0;
+    public static final String PRICE_MUST_BE_GREATER_THAN = "The price must be greater than {}" + MIN_PRICE_DISH;
+
+    /**Restaurant*/
+    public static final String RESTAURANT_NOT_FOUND = "This restaurant doesn't exist in the system";
 
 }

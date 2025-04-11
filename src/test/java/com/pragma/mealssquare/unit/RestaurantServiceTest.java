@@ -3,7 +3,6 @@ package com.pragma.mealssquare.unit;
 import com.pragma.mealssquare.domain.model.*;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.usecase.UseCaseRestaurant;
-import com.pragma.mealssquare.infraestructure.feign.IUsersMealsSquare;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
 public class RestaurantServiceTest {

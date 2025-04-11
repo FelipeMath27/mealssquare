@@ -16,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -39,6 +41,13 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
     }
 
     @Override
+    public Restaurant getRestaurantByNit(String nitRestaurant) {
+        Optional<RestaurantEntity> userEntityOptional = iRestaurantRepository.findByNit(nitRestaurant);
+        return userEntityOptional.map(restaurantEntityMapper::toRestaurant).
+                orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,ConstantsErrorMessage.RESTAURANT_NOT_FOUND));
+    }
+
+    @Override
     public User getUserByEmail(String email) {
         return Optional.ofNullable(email)
                 .map(iUsersMealsSquare::getUserByEmail)
@@ -51,4 +60,5 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
                 .map(iUsersMealsSquare::getUserById)
                 .orElseThrow(() -> new MicroserviceConnectionException(ConstantsErrorMessage.CANT_CONNECT_MICROSERVICES));
     }
+
 }

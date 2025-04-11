@@ -1,5 +1,6 @@
 package com.pragma.mealssquare.domain.validator;
 
+import com.pragma.mealssquare.domain.model.Dish;
 import com.pragma.mealssquare.domain.model.Rol;
 import com.pragma.mealssquare.domain.model.TypeRolEnum;
 import com.pragma.mealssquare.domain.model.User;
@@ -58,6 +59,12 @@ public class ValidatorClasses {
         Optional.ofNullable(user)
                 .filter(u -> u.getRol() != null && TypeRolEnum.OWNER.name().equals(u.getRol().getNameRol()))
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.IS_NOT_OWNER_ROLE));
+    }
+
+    public static double validatePriceDish(double price){
+        return Optional.of(price)
+                .filter(pr -> pr > ConstantsErrorMessage.MIN_PRICE_DISH)
+                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.PRICE_MUST_BE_GREATER_THAN));
     }
 
 }

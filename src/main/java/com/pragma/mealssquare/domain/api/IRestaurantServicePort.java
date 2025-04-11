@@ -5,4 +5,9 @@ import com.pragma.mealssquare.domain.model.User;
 
 public interface IRestaurantServicePort {
     void saveRestaurants (Restaurant restaurant, String emailCreator);
+
+    User getUserByEmail(String email);
+    User getUserById(Long id);
+
+    Restaurant getRestaurantByNit(String nitRestaurant);
 }

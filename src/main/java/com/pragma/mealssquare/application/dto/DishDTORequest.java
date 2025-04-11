@@ -1,7 +1,5 @@
 package com.pragma.mealssquare.application.dto;
 
-import com.pragma.mealssquare.domain.model.Category;
-import com.pragma.mealssquare.domain.model.Restaurant;
 import com.pragma.mealssquare.domain.model.StatusDish;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

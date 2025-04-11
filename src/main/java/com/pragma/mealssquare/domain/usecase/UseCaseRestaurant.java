@@ -48,4 +48,20 @@ public class UseCaseRestaurant implements IRestaurantServicePort {
         iRestaurantPersistencePort.saveRestaurant(restaurant);
     }
 
+    @Override
+    public Restaurant getRestaurantByNit(String nitRestaurant) {
+        return ValidatorClasses.sanitize(nitRestaurant)
+                .map(iRestaurantPersistencePort::getRestaurantByNit)
+                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.RESTAURANT_NOT_FOUND));
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return null;
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return null;
+    }
 }

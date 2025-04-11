@@ -6,6 +6,8 @@ import com.pragma.mealssquare.domain.model.User;
 public interface IRestaurantPersistencePort {
     void saveRestaurant(Restaurant restaurant);
 
+    Restaurant getRestaurantByNit(String nitRestaurant);
+
     User getUserByEmail(String email);
     User getUserById(Long id);
 }
