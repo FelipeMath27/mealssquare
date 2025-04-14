@@ -23,11 +23,14 @@ public class ConstantsErrorMessage {
     /**Microservices*/
     public static final String CANT_CONNECT_MICROSERVICES = "CAN'T CONNECT TO THE MICROSERVICES";
 
-    /**Price dish*/
+    /**Dish*/
     public static final double MIN_PRICE_DISH = 0;
     public static final String PRICE_MUST_BE_GREATER_THAN = "The price must be greater than {}" + MIN_PRICE_DISH;
+    public static final String CANT_SAVE_DISH = "Can't persist the new dish in the system";
 
     /**Restaurant*/
     public static final String RESTAURANT_NOT_FOUND = "This restaurant doesn't exist in the system";
+
+
 
 }

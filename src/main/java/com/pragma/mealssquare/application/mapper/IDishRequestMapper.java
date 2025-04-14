@@ -1,41 +1,35 @@
 package com.pragma.mealssquare.application.mapper;
 
 import com.pragma.mealssquare.application.dto.DishDTORequest;
-import com.pragma.mealssquare.application.dto.RestaurantDTORequest;
+
 import com.pragma.mealssquare.domain.model.Category;
 import com.pragma.mealssquare.domain.model.Dish;
 import com.pragma.mealssquare.domain.model.Restaurant;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        unmappedSourcePolicy = ReportingPolicy.IGNORE)
+        unmappedSourcePolicy = ReportingPolicy.IGNORE,
+        uses = {ICategoryRequestMapper.class, RestaurantRequestMapper.class})
 public interface IDishRequestMapper {
 
-    @Mapping(target = "category", source = "idCategory", qualifiedByName = "mapCategory")
-    @Mapping(target = "restaurant", source = "idRestaurant", qualifiedByName = "mapRestaurant")
+    @Mapping(target = "category", expression = "java(createCategoryById(dishDTORequest.getIdCategory()))")
+    @Mapping(target = "restaurant", expression = "java(createRestaurantById(dishDTORequest.getIdRestaurant()))")
     Dish toDish(DishDTORequest dishDTORequest);
 
-    @Named("mapCategory")
-    default Category mapCategory(Long idCategory) {
+    default Category createCategoryById(Long idCategory) {
         if (idCategory == null) {
             return null;
         }
-        Category category = new Category();
-        category.setIdCategory(idCategory);
-        return category;
+        return new Category(idCategory, null, null); //
     }
 
-    @Named("mapRestaurant")
-    default Restaurant mapRestaurant(Long idRestaurant) {
-        if (idRestaurant == null){
+    default Restaurant createRestaurantById(Long idRestaurant) {
+        if (idRestaurant == null) {
             return null;
         }
-        Restaurant restaurant = new Restaurant();
-        restaurant.setIdRestaurant(idRestaurant);
-        return restaurant;
+        return new Restaurant(idRestaurant,null,null,null,null,null,null); //
     }
 }

@@ -13,9 +13,9 @@ public class Dish {
     private Long idDish;
     private String nameDish;
     private Category category;
-    private String descriptionDish;
-    private Double price;
+    private String dishDescription;
+    private Double priceDish;
     private Restaurant restaurant;
-    private String urlImage;
+    private String urlImageDish;
     private StatusDish statusDish;
 }

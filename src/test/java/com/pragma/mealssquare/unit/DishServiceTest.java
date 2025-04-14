@@ -3,7 +3,9 @@ package com.pragma.mealssquare.unit;
 import com.pragma.mealssquare.domain.api.ICategoryServicePort;
 import com.pragma.mealssquare.domain.api.IRestaurantServicePort;
 import com.pragma.mealssquare.domain.model.*;
+import com.pragma.mealssquare.domain.spi.ICategoryPersistencePort;
 import com.pragma.mealssquare.domain.spi.IDishPersistencePort;
+import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.usecase.UseCaseDish;
 import com.pragma.mealssquare.domain.usecase.UseCaseRestaurant;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,10 +25,10 @@ public class DishServiceTest {
     private IDishPersistencePort iDishPersistencePort;
 
     @Mock
-    private IRestaurantServicePort iRestaurantServicePort;
+    private IRestaurantPersistencePort iRestaurantPersistencePort;
 
     @Mock
-    private ICategoryServicePort iCategoryServicePort;
+    private ICategoryPersistencePort iCategoryPersistencePort;
 
     @InjectMocks
     private UseCaseDish useCaseDish;
@@ -52,9 +54,9 @@ public class DishServiceTest {
 
     @Test
     void test_crete_new_dish(){
-        when(iRestaurantServicePort.getUserByEmail(user.getEmail())).thenReturn(user);
-        when(iCategoryServicePort.getCategoryId(category.getIdCategory())).thenReturn(category);
-        when(iRestaurantServicePort.getRestaurantByNit(restaurant.getNit())).thenReturn(restaurant);
+        when(iRestaurantPersistencePort.getUserByEmail(user.getEmail())).thenReturn(user);
+        when(iCategoryPersistencePort.getCategoryId(category.getIdCategory())).thenReturn(category);
+        when(iRestaurantPersistencePort.getRestaurantById(restaurant.getIdRestaurant())).thenReturn(restaurant);
         useCaseDish.saveNewDish(newDish, user.getEmail());
         verify(iDishPersistencePort,times(1)).saveDish(any(Dish.class));
     }

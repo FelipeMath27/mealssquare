@@ -8,6 +8,8 @@ public interface IRestaurantPersistencePort {
 
     Restaurant getRestaurantByNit(String nitRestaurant);
 
+    Restaurant getRestaurantById(Long idRestaurant);
+
     User getUserByEmail(String email);
     User getUserById(Long id);
 }

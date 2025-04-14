@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryDTORequest {
+    private Long idCategory;
     private String nameCategory;
     private String descriptionCategory;
 }

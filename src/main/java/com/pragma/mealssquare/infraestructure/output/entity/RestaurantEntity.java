@@ -10,7 +10,6 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "PRG_TBL_RESTAURANT")
-@SequenceGenerator(name = "restaurant_seq", sequenceName = "prg_tbl_restaurant_seq", allocationSize = 1)
 @Getter
 @Setter
 @NoArgsConstructor
