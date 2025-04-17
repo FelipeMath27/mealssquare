@@ -6,4 +6,6 @@ public interface IDishServicePort {
     void saveNewDish(Dish dish, String emailOwner);
 
     Dish getDishById(Long id);
+
+    void updateDish(Dish dish, String emailOwner);
 }

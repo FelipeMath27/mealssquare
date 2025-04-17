@@ -1,6 +1,5 @@
 package com.pragma.mealssquare.domain.usecase;
 
-import com.pragma.mealssquare.domain.api.ICategoryServicePort;
 import com.pragma.mealssquare.domain.api.IDishServicePort;
 import com.pragma.mealssquare.domain.model.*;
 import com.pragma.mealssquare.domain.spi.ICategoryPersistencePort;
@@ -27,11 +26,8 @@ public class UseCaseDish implements IDishServicePort {
     public void saveNewDish(Dish dish, String emailOwner) {
         log.info(ConstantsErrorMessage.START_FLOW);
         ValidatorClasses.sanitize(emailOwner);
-        log.info("this is the email {}", emailOwner);
         User user = iRestaurantPersistencePort.getUserByEmail(emailOwner);
-        log.info("This is the user {}", user.getRol());
         ValidatorClasses.validateOwner(user);
-        log.info("This is the id category {}",dish.getCategory().getIdCategory());
         validateCategory(dish);
         validateRestaurantExist(dish.getRestaurant());
         processToValidateNewDish(dish);
@@ -59,18 +55,42 @@ public class UseCaseDish implements IDishServicePort {
 
 
     private void processToValidateNewDish(Dish newDish) {
-        log.info("this is the name: {}", newDish.getNameDish());
+        log.info(ConstantsErrorMessage.START_PROCESS_TO_VALIDATE_CONDITION);
         newDish.setNameDish(ValidatorClasses.sanitize(newDish.getNameDish())
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL)));
-        log.info("this is the name: {}", newDish.getDishDescription());
         newDish.setDishDescription(ValidatorClasses.sanitize(newDish.getDishDescription())
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL)));
-        log.info("this is the name: {}", newDish.getPriceDish());
         newDish.setPriceDish(ValidatorClasses.validatePriceDish(newDish.getPriceDish()));
         newDish.setStatusDish(StatusDish.ACT);
         newDish.setUrlImageDish(ValidatorClasses.sanitize(newDish.getUrlImageDish())
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL)));
         iDishPersistencePort.saveDish(newDish);
+    }
+
+    @Override
+    public void updateDish(Dish dish, String emailOwner) {
+        log.info(ConstantsErrorMessage.START_FLOW);
+        ValidatorClasses.sanitize(emailOwner);
+        User user = iRestaurantPersistencePort.getUserByEmail(emailOwner);
+        ValidatorClasses.validateOwner(user);
+        Dish existDish = validateExistDish(dish);
+        processToUpdateDish(existDish, dish);
+    }
+
+    private void processToUpdateDish(Dish existDish, Dish newDish) {
+        existDish.setDishDescription(ValidatorClasses.sanitize(newDish.getDishDescription())
+                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL)));
+        existDish.setPriceDish(ValidatorClasses.validatePriceDish(newDish.getPriceDish()));
+        iDishPersistencePort.saveDish(existDish);
+    }
+
+
+    private Dish validateExistDish(Dish dish) {
+        log.info(ConstantsErrorMessage.VALIDATE_EXIST_DISH);
+        return Optional.ofNullable(dish)
+                .map(Dish::getIdDish)
+                .map(iDishPersistencePort::getDishById)
+                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.DISH_NOT_FOUND));
     }
 
     @Override

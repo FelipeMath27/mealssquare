@@ -50,10 +50,5 @@ public class RestaurantServiceTest {
         verify(iRestaurantPersistencePort,times(1)).saveRestaurant(any(Restaurant.class));
     }
 
-    /** @Test
-    void test_create_restaurant_two() {
-        assertDoesNotThrow(() -> useCaseRestaurant.saveRestaurants(restaurant,creatorUser.getEmail()));
-        verify(iRestaurantPersistencePort, times(1)).saveRestaurant(any(Restaurant.class));
-    }*/
 
 }

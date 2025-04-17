@@ -2,6 +2,7 @@ package com.pragma.mealssquare.application.handler;
 
 import com.pragma.mealssquare.application.dto.DishDTORequest;
 import com.pragma.mealssquare.application.dto.DishDTOResponse;
+import com.pragma.mealssquare.application.dto.DishUpdateDTORequest;
 import com.pragma.mealssquare.application.mapper.IDishRequestMapper;
 import com.pragma.mealssquare.application.mapper.IDishResponseMapper;
 import com.pragma.mealssquare.domain.api.IDishServicePort;
@@ -29,5 +30,10 @@ public class DishHandler implements IDishHandler{
     @Override
     public DishDTOResponse getDishDTO(Long idDish) {
         return iDishResponseMapper.toResponse(iDishServicePort.getDishById(idDish));
+    }
+
+    @Override
+    public void updateDish(DishUpdateDTORequest dishUpdateDTORequest, String emailOwner) {
+        iDishServicePort.updateDish(iDishRequestMapper.toDishUpdate(dishUpdateDTORequest),emailOwner);
     }
 }

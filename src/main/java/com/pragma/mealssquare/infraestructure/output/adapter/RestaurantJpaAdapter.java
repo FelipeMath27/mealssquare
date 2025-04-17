@@ -1,5 +1,6 @@
 package com.pragma.mealssquare.infraestructure.output.adapter;
 
+import com.pragma.mealssquare.domain.model.Dish;
 import com.pragma.mealssquare.domain.model.Restaurant;
 import com.pragma.mealssquare.domain.model.User;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;

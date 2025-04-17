@@ -3,6 +3,7 @@ package com.pragma.mealssquare.infraestructure.output.adapter;
 import com.pragma.mealssquare.domain.model.Dish;
 import com.pragma.mealssquare.domain.spi.IDishPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
+import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
 import com.pragma.mealssquare.infraestructure.exceptions.InfrastructureException;
 import com.pragma.mealssquare.infraestructure.output.entity.DishEntity;
 import com.pragma.mealssquare.infraestructure.output.mapper.IDishEntityMapper;
@@ -21,12 +22,10 @@ public class DishJpaAdapter implements IDishPersistencePort {
     private final IDishRepository iDishRepository;
     private final IDishEntityMapper iDishEntityMapper;
 
-
     @Override
     public void saveDish(Dish dish) {
         try {
-            DishEntity dishEntity = iDishEntityMapper.toDishEntity(dish);
-            iDishRepository.save(dishEntity);
+            iDishRepository.save( iDishEntityMapper.toDishEntity(dish));
         }catch (DataAccessException | PersistenceException ex){
             throw new InfrastructureException(ConstantsErrorMessage.CANT_SAVE_DISH, ex);
         }
@@ -34,6 +33,8 @@ public class DishJpaAdapter implements IDishPersistencePort {
 
     @Override
     public Dish getDishById(Long idDish) {
-        return null;
+            return iDishEntityMapper.toDish(iDishRepository.findByIdDish(idDish)
+                    .orElseThrow(()-> new CustomException(ConstantsErrorMessage.DISH_NOT_FOUND)));
     }
+
 }
