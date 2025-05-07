@@ -39,7 +39,7 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
         try {
             iRestaurantRepository.save(restaurantEntity = restaurantEntityMapper.toRestaurantEntity(restaurant));
         } catch (DataAccessException | PersistenceException ex){
-            throw new InfrastructureException("Failed to save the new owner", ex);
+            throw new InfrastructureException(ConstantsErrorMessage.RESTAURANT_NOT_SAVED, ex);
         }
     }
 
