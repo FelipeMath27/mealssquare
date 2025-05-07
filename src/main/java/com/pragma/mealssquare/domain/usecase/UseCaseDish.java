@@ -23,11 +23,8 @@ public class UseCaseDish implements IDishServicePort {
     private final ICategoryPersistencePort iCategoryPersistencePort;
 
     @Override
-    public void saveNewDish(Dish dish, String emailOwner) {
+    public void saveNewDish(Dish dish) {
         log.info(ConstantsErrorMessage.START_FLOW);
-        ValidatorClasses.sanitize(emailOwner);
-        User user = iRestaurantPersistencePort.getUserByEmail(emailOwner);
-        ValidatorClasses.validateOwner(user);
         validateCategory(dish);
         validateRestaurantExist(dish.getRestaurant());
         processToValidateNewDish(dish);
@@ -68,11 +65,8 @@ public class UseCaseDish implements IDishServicePort {
     }
 
     @Override
-    public void updateDish(Dish dish, String emailOwner) {
+    public void updateDish(Dish dish) {
         log.info(ConstantsErrorMessage.START_FLOW);
-        ValidatorClasses.sanitize(emailOwner);
-        User user = iRestaurantPersistencePort.getUserByEmail(emailOwner);
-        ValidatorClasses.validateOwner(user);
         Dish existDish = validateExistDish(dish);
         processToUpdateDish(existDish, dish);
     }

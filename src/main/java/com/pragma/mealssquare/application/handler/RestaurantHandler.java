@@ -25,9 +25,9 @@ public class RestaurantHandler implements IRestaurantHandler{
     private final IUsersMealsSquare usersMealsSquare;
 
     @Override
-    public void saveListRestaurant(RestaurantDTORequest restaurantDTORequest, String emailCreator) {
+    public void saveListRestaurant(RestaurantDTORequest restaurantDTORequest) {
             Restaurant newRestaurant = restaurantRequestMapper.toRestaurant(restaurantDTORequest);
-            iRestaurantServicePort.saveRestaurants(newRestaurant,emailCreator);
+            iRestaurantServicePort.saveRestaurants(newRestaurant);
     }
 
     @Override

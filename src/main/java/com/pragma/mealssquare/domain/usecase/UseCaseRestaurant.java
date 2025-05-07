@@ -24,11 +24,9 @@ public class UseCaseRestaurant implements IRestaurantServicePort {
     private final IRestaurantPersistencePort iRestaurantPersistencePort;
 
     @Override
-    public void saveRestaurants(Restaurant restaurant, String emailCreator) {
+    public void saveRestaurants(Restaurant restaurant) {
         log.info(ConstantsErrorMessage.START_FLOW);
-        User userCreatorRestaurant = iRestaurantPersistencePort.getUserByEmail(emailCreator);
         User userOwnerRestaurant = iRestaurantPersistencePort.getUserById(restaurant.getIdOwner());
-        ValidatorClasses.validateAdminCreator(userCreatorRestaurant);
         ValidatorClasses.validateOwner(userOwnerRestaurant);
         processValidateSaveRestaurant(restaurant);
     }

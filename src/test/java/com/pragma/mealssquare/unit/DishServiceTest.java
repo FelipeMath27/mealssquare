@@ -59,7 +59,7 @@ public class DishServiceTest {
 
     @Test
     void test_crete_new_dish(){
-        useCaseDish.saveNewDish(newDish, user.getEmail());
+        useCaseDish.saveNewDish(newDish);
         verify(iDishPersistencePort,times(1)).saveDish(any(Dish.class));
     }
 
@@ -67,7 +67,7 @@ public class DishServiceTest {
     void test_create_new_dish_with_less_than_zero(){
         newDish.setPriceDish(-1.0);
         CustomException customException = assertThrows(CustomException.class, ()->{
-            useCaseDish.saveNewDish(newDish,user.getEmail());
+            useCaseDish.saveNewDish(newDish);
         });
 
         assertEquals(ConstantsErrorMessage.PRICE_MUST_BE_GREATER_THAN, customException.getMessage());
@@ -79,7 +79,7 @@ public class DishServiceTest {
     void test_create_dish_without_name(){
         newDish.setNameDish(null);
         CustomException exception = assertThrows(CustomException.class,()->{
-            useCaseDish.saveNewDish(newDish,user.getEmail());
+            useCaseDish.saveNewDish(newDish);
         });
 
         assertEquals(ConstantsErrorMessage.CANT_BE_NULL,exception.getMessage());
@@ -91,7 +91,7 @@ public class DishServiceTest {
     void test_create_dish_without_description(){
         newDish.setDishDescription(null);
         CustomException exception = assertThrows(CustomException.class,()->{
-            useCaseDish.saveNewDish(newDish,user.getEmail());
+            useCaseDish.saveNewDish(newDish);
         });
 
         assertEquals(ConstantsErrorMessage.CANT_BE_NULL,exception.getMessage());
@@ -104,21 +104,21 @@ public class DishServiceTest {
     void test_validate_correct_update_dish(){
         newDish.setPriceDish(14.5);
         newDish.setDishDescription("This updated is for an extra meet in the pizza");
-        useCaseDish.updateDish(newDish,user.getEmail());
+        useCaseDish.updateDish(newDish);
         verify(iDishPersistencePort,times(1)).saveDish(any(Dish.class));
     }
 
     @Test
     void test_validate_correct_update_dish_by_price(){
         newDish.setPriceDish(14.5);
-        useCaseDish.updateDish(newDish,user.getEmail());
+        useCaseDish.updateDish(newDish);
         verify(iDishPersistencePort,times(1)).saveDish(any(Dish.class));
     }
 
     @Test
     void test_validate_correct_update_dish_by_description(){
         newDish.setDishDescription("This updated is for an extra meet in the pizza");
-        useCaseDish.updateDish(newDish,user.getEmail());
+        useCaseDish.updateDish(newDish);
         verify(iDishPersistencePort,times(1)).saveDish(any(Dish.class));
     }
 
@@ -127,7 +127,7 @@ public class DishServiceTest {
         newDish.setIdDish(2L);
         when(iDishPersistencePort.getDishById(newDish.getIdDish())).thenReturn(null);
         CustomException catchException = assertThrows(CustomException.class,
-                ()-> useCaseDish.updateDish(newDish,user.getEmail()));
+                ()-> useCaseDish.updateDish(newDish));
 
         assertEquals(ConstantsErrorMessage.DISH_NOT_FOUND,catchException.getMessage());
         verify(iDishPersistencePort,never()).saveDish(newDish);

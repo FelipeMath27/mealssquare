@@ -46,7 +46,7 @@ public class RestaurantServiceTest {
     void test_create_restaurant(){
         when(iRestaurantPersistencePort.getUserByEmail(creatorUser.getEmail())).thenReturn(creatorUser);
         when(iRestaurantPersistencePort.getUserById(restaurant.getIdOwner())).thenReturn(ownerUser);
-        useCaseRestaurant.saveRestaurants(restaurant, creatorUser.getEmail());
+        useCaseRestaurant.saveRestaurants(restaurant);
         verify(iRestaurantPersistencePort,times(1)).saveRestaurant(any(Restaurant.class));
     }
 
