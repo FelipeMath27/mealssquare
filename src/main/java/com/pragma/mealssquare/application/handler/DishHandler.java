@@ -22,9 +22,9 @@ public class DishHandler implements IDishHandler{
     private final IDishResponseMapper iDishResponseMapper;
 
     @Override
-    public void saveDish(DishDTORequest dishDTORequest, String emailOwner) {
+    public void saveDish(DishDTORequest dishDTORequest) {
         Dish dish = iDishRequestMapper.toDish(dishDTORequest);
-        iDishServicePort.saveNewDish(dish,emailOwner);
+        iDishServicePort.saveNewDish(dish);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class DishHandler implements IDishHandler{
     }
 
     @Override
-    public void updateDish(DishUpdateDTORequest dishUpdateDTORequest, String emailOwner) {
-        iDishServicePort.updateDish(iDishRequestMapper.toDishUpdate(dishUpdateDTORequest),emailOwner);
+    public void updateDish(DishUpdateDTORequest dishUpdateDTORequest) {
+        iDishServicePort.updateDish(iDishRequestMapper.toDishUpdate(dishUpdateDTORequest));
     }
 }

@@ -18,9 +18,8 @@ public class RestaurantRestController {
     }
 
     @PostMapping("/create-restaurant")
-    public ResponseEntity<Void> createRestaurant(@RequestBody RestaurantDTORequest restaurantDTORequest,
-                                                 @RequestHeader String emailCreatorRestaurant){
-        iRestaurantHandler.saveListRestaurant(restaurantDTORequest,emailCreatorRestaurant);
+    public ResponseEntity<Void> createRestaurant(@RequestBody RestaurantDTORequest restaurantDTORequest){
+        iRestaurantHandler.saveListRestaurant(restaurantDTORequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

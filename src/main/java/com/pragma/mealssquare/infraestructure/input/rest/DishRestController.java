@@ -18,17 +18,15 @@ public class DishRestController {
     private final IDishHandler iDishHandler;
 
     @PostMapping("/create-dish")
-    public ResponseEntity<Void> saveDish(@RequestBody DishDTORequest dishDTORequest,
-                                         @RequestHeader String emailOwner){
+    public ResponseEntity<Void> saveDish(@RequestBody DishDTORequest dishDTORequest){
         log.info("{}",dishDTORequest);
-        iDishHandler.saveDish(dishDTORequest,emailOwner);
+        iDishHandler.saveDish(dishDTORequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping("/update-dish")
-    public ResponseEntity<Void> updateDish(@RequestBody DishUpdateDTORequest dishUpdateDTORequest,
-                                           @RequestHeader String emailOwner){
-        iDishHandler.updateDish(dishUpdateDTORequest, emailOwner);
+    public ResponseEntity<Void> updateDish(@RequestBody DishUpdateDTORequest dishUpdateDTORequest){
+        iDishHandler.updateDish(dishUpdateDTORequest);
         return ResponseEntity.noContent().build();
     }
 }
