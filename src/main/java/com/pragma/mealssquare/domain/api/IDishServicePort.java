@@ -1,6 +1,7 @@
 package com.pragma.mealssquare.domain.api;
 
 import com.pragma.mealssquare.domain.model.Dish;
+import com.pragma.mealssquare.domain.model.User;
 
 public interface IDishServicePort {
     void saveNewDish(Dish dish);
@@ -8,4 +9,6 @@ public interface IDishServicePort {
     Dish getDishById(Long id);
 
     void updateDish(Dish dish);
+
+    void updateDishStatus(Dish dish, User user);
 }

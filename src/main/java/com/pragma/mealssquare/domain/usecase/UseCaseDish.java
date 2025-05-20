@@ -22,6 +22,7 @@ public class UseCaseDish implements IDishServicePort {
     private final IRestaurantPersistencePort iRestaurantPersistencePort;
     private final ICategoryPersistencePort iCategoryPersistencePort;
 
+
     @Override
     public void saveNewDish(Dish dish) {
         log.info(ConstantsErrorMessage.START_FLOW);
@@ -69,6 +70,20 @@ public class UseCaseDish implements IDishServicePort {
         log.info(ConstantsErrorMessage.START_FLOW);
         Dish existDish = validateExistDish(dish);
         processToUpdateDish(existDish, dish);
+    }
+
+    @Override
+    public void updateDishStatus(Dish dish, User user) {
+        log.info(ConstantsErrorMessage.START_FLOW);
+        Dish getDish = iDishPersistencePort.getDishById(dish.getIdDish());
+        validateOwnerUpdateDish(getDish.getRestaurant(),user.getIdUser());
+    }
+
+    private void validateOwnerUpdateDish(Restaurant restaurant, Long idUser) {
+        Optional.ofNullable(restaurant)
+                .map(Restaurant::getIdOwner)
+                .filter(idOwner->idOwner.equals(idUser))
+                .orElseThrow(()-> new CustomException(ConstantsErrorMessage.UNAUTHORIZED_OPERATION));
     }
 
     private void processToUpdateDish(Dish existDish, Dish newDish) {

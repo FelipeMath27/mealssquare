@@ -8,4 +8,5 @@ public interface IJwtTokenProvider {
     String generateToken(User user);
     boolean isTokenValid(String token);
     Claims getClaims(String token);
+    public String getEmailFromToken(String token);
 }

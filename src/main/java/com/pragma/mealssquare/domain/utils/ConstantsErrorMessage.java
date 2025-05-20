@@ -52,6 +52,7 @@ public class ConstantsErrorMessage {
     public static final String CONSTANT_HEADER_AUTHENTICATION = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
     public static final int BEARER_SUBSTRING = 7;
+    public static final String UNAUTHORIZED_OPERATION = "unauthorized to do this operation";
 
 
 }

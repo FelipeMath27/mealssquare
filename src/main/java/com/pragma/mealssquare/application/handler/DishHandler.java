@@ -2,11 +2,13 @@ package com.pragma.mealssquare.application.handler;
 
 import com.pragma.mealssquare.application.dto.DishDTORequest;
 import com.pragma.mealssquare.application.dto.DishDTOResponse;
+import com.pragma.mealssquare.application.dto.DishDTOStatusRequest;
 import com.pragma.mealssquare.application.dto.DishUpdateDTORequest;
 import com.pragma.mealssquare.application.mapper.IDishRequestMapper;
 import com.pragma.mealssquare.application.mapper.IDishResponseMapper;
 import com.pragma.mealssquare.domain.api.IDishServicePort;
 import com.pragma.mealssquare.domain.model.Dish;
+import com.pragma.mealssquare.infraestructure.feign.IUsersMealsSquare;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class DishHandler implements IDishHandler{
     private final IDishServicePort iDishServicePort;
     private final IDishRequestMapper iDishRequestMapper;
     private final IDishResponseMapper iDishResponseMapper;
+    private final IUsersMealsSquare iUsersMealsSquare;
 
     @Override
     public void saveDish(DishDTORequest dishDTORequest) {
@@ -35,5 +38,10 @@ public class DishHandler implements IDishHandler{
     @Override
     public void updateDish(DishUpdateDTORequest dishUpdateDTORequest) {
         iDishServicePort.updateDish(iDishRequestMapper.toDishUpdate(dishUpdateDTORequest));
+    }
+
+    @Override
+    public void updateStatusDish(DishDTOStatusRequest dishDTOStatusRequest, String emailOwner) {
+        iDishServicePort.updateDishStatus(iDishRequestMapper.toDishStatusUpdate(dishDTOStatusRequest), iUsersMealsSquare.getUserByEmail(emailOwner));
     }
 }

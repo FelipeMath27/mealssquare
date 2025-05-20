@@ -2,6 +2,7 @@ package com.pragma.mealssquare.application.mapper;
 
 import com.pragma.mealssquare.application.dto.DishDTORequest;
 
+import com.pragma.mealssquare.application.dto.DishDTOStatusRequest;
 import com.pragma.mealssquare.application.dto.DishUpdateDTORequest;
 import com.pragma.mealssquare.domain.model.Category;
 import com.pragma.mealssquare.domain.model.Dish;
@@ -35,4 +36,6 @@ public interface IDishRequestMapper {
     }
 
     Dish toDishUpdate(DishUpdateDTORequest dishUpdateDTORequest);
+
+    Dish toDishStatusUpdate(DishDTOStatusRequest dishDTOStatusRequest);
 }

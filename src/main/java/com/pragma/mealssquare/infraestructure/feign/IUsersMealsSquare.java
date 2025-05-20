@@ -1,11 +1,10 @@
 package com.pragma.mealssquare.infraestructure.feign;
 
+import com.pragma.mealssquare.application.dto.UserDTORequest;
 import com.pragma.mealssquare.domain.model.Rol;
 import com.pragma.mealssquare.domain.model.User;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "users-service", url = "${users.service.url}")
 public interface IUsersMealsSquare {
@@ -20,4 +19,7 @@ public interface IUsersMealsSquare {
 
     @GetMapping("users/id/{idUser}")
     User getUserById(@RequestParam("idUser") Long idUser);
+
+    @PostMapping("users/create-employee")
+    User createEmployee(@RequestBody UserDTORequest userEmployeeDTORequest);
 }
