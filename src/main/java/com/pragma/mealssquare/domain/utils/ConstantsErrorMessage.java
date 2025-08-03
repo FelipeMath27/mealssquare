@@ -25,6 +25,9 @@ public class ConstantsErrorMessage {
     public static final String PRICE_MUST_BE_GREATER_THAN = "The price must be greater than {}" + MIN_PRICE_DISH;
     public static final String CANT_SAVE_DISH = "Can't persist the new dish in the system";
     public static final String DISH_NOT_FOUND = "This dish don't found in the system";
+    public static final String DISH_NAME_CANT_BE_NULL = "Dish name can't be null";
+    public static final String DISH_DESCRIPTION_CANT_BE_NULL = "Dish description can't be null";
+    public static final String DISH_URL_CANT_BE_NULL = "Dish url can't be null";
 
     /**Restaurant*/
     public static final String RESTAURANT_NOT_FOUND = "This restaurant doesn't exist in the system";

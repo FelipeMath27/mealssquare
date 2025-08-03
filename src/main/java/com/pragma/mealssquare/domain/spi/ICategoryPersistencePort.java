@@ -2,7 +2,9 @@ package com.pragma.mealssquare.domain.spi;
 
 import com.pragma.mealssquare.domain.model.Category;
 
+import java.util.Optional;
+
 public interface ICategoryPersistencePort {
-    Category getCategoryId (Long idCategory);
-    Category getCategoryName (String nameCategory);
+    Optional<Category> findById (Long idCategory);
+    Optional<Category> findByName (String nameCategory);
 }

@@ -4,7 +4,7 @@ import com.pragma.mealssquare.domain.model.Dish;
 import com.pragma.mealssquare.domain.model.User;
 
 public interface IDishServicePort {
-    void saveNewDish(Dish dish);
+    void saveDish(Dish dish);
 
     Dish getDishById(Long id);
 

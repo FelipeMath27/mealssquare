@@ -27,7 +27,7 @@ public class DishHandler implements IDishHandler{
     @Override
     public void saveDish(DishDTORequest dishDTORequest) {
         Dish dish = iDishRequestMapper.toDish(dishDTORequest);
-        iDishServicePort.saveNewDish(dish);
+        iDishServicePort.saveDish(dish);
     }
 
     @Override

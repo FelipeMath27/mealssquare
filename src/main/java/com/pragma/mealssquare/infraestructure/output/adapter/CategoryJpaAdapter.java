@@ -22,16 +22,16 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
     private final ICategoryEntityMapper iCategoryEntityMapper;
 
     @Override
-    public Category getCategoryId(Long idCategory) {
+    public Optional<Category> findById(Long idCategory) {
         Optional<CategoryEntity> categoryEntityOptional = iCategoryRepository.findByIdCategory(idCategory);
-        return categoryEntityOptional.map(iCategoryEntityMapper::toCategory)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ConstantsErrorMessage.CATEGORY_NOT_FOUND));
+        return Optional.ofNullable(categoryEntityOptional.map(iCategoryEntityMapper::toCategory)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ConstantsErrorMessage.CATEGORY_NOT_FOUND)));
     }
 
     @Override
-    public Category getCategoryName(String nameCategory) {
+    public Optional<Category> findByName(String nameCategory) {
         Optional<CategoryEntity> categoryEntityOptional = iCategoryRepository.findByNameCategory(nameCategory);
-        return categoryEntityOptional.map(iCategoryEntityMapper::toCategory)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ConstantsErrorMessage.CATEGORY_NOT_FOUND));
+        return Optional.ofNullable(categoryEntityOptional.map(iCategoryEntityMapper::toCategory)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ConstantsErrorMessage.CATEGORY_NOT_FOUND)));
     }
 }

@@ -17,9 +17,7 @@ public class UseCaseCategory implements ICategoryServicePort {
 
     @Override
     public Category getCategoryId(Long idCategory) {
-        return Optional.ofNullable(idCategory)
-                .filter(id -> id > 0)
-                .map(iCategoryPersistencePort::getCategoryId)
+        return iCategoryPersistencePort.findById(idCategory)
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CATEGORY_NOT_FOUND));
     }
 

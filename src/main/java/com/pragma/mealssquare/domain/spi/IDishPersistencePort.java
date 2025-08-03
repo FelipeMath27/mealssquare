@@ -2,8 +2,10 @@ package com.pragma.mealssquare.domain.spi;
 
 import com.pragma.mealssquare.domain.model.Dish;
 
-public interface IDishPersistencePort {
-    void saveDish(Dish dish);
+import java.util.Optional;
 
-    Dish getDishById(Long idDish);
+public interface IDishPersistencePort {
+    void save(Dish dish);
+
+    Optional<Dish> findById(Long idDish);
 }
