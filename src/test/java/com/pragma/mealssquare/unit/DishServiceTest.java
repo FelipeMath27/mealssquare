@@ -89,6 +89,24 @@ class DishServiceTest {
         verify(iDishPersistencePort,never()).save(any(Dish.class));
     }
 
+    @Test
+    void test_create_dish_with_non_restaurant_exist() {
+        newDish.getRestaurant().setIdRestaurant(10L);
+        when(iRestaurantPersistencePort.findRestaurantById(10L))
+                .thenReturn(Optional.empty());
+        customException = assertThrows(CustomException.class, () -> useCaseDish.saveDish(newDish));
+        assertEquals(ConstantsErrorMessage.RESTAURANT_NOT_FOUND,customException.getMessage());
+        verify(iDishPersistencePort, never()).save(any(Dish.class));
+    }
+
+    @Test
+    void test_create_dish_with_status_inactive() {
+        newDish.setStatusDish(StatusDish.INA);
+        useCaseDish.saveDish(newDish);
+        verify(iDishPersistencePort, times(1)).save(any(Dish.class));
+        assertEquals(StatusDish.ACT, newDish.getStatusDish());
+    }
+
     /** Start test to update dish*/
     @Test
     void test_validate_correct_update_dish(){
