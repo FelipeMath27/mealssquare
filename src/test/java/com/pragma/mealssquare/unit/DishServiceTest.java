@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -51,9 +52,9 @@ public class DishServiceTest {
                 user.getRol().getIdRol(), "+57321312", "www.uno.com", "123456789");
         newDish = new Dish(1L,"Vegetarina Pizza", category,"pizza with mushrooms, onion, cheese and tomato"
                 ,10.0, restaurant,"www.pizza.com",null);
-        when(iRestaurantPersistencePort.getUserByEmail(user.getEmail())).thenReturn(user);
+        when(iRestaurantPersistencePort.findUserByEmail(user.getEmail())).thenReturn(Optional.ofNullable(user));
         when(iCategoryPersistencePort.getCategoryId(category.getIdCategory())).thenReturn(category);
-        when(iRestaurantPersistencePort.getRestaurantById(restaurant.getIdRestaurant())).thenReturn(restaurant);
+        when(iRestaurantPersistencePort.findRestaurantById(restaurant.getIdRestaurant())).thenReturn(Optional.ofNullable(restaurant));
         when(iDishPersistencePort.getDishById(newDish.getIdDish())).thenReturn(newDish);
     }
 

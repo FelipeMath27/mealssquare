@@ -1,16 +1,17 @@
 package com.pragma.mealssquare.domain.spi;
 
-import com.pragma.mealssquare.domain.model.Dish;
 import com.pragma.mealssquare.domain.model.Restaurant;
 import com.pragma.mealssquare.domain.model.User;
 
+import java.util.Optional;
+
 public interface IRestaurantPersistencePort {
-    void saveRestaurant(Restaurant restaurant);
+    void save(Restaurant restaurant);
 
-    Restaurant getRestaurantByNit(String nitRestaurant);
+    Optional<Restaurant> findRestaurantByNit(String nitRestaurant);
 
-    Restaurant getRestaurantById(Long idRestaurant);
+    Optional<Restaurant> findRestaurantById(Long idRestaurant);
 
-    User getUserByEmail(String email);
-    User getUserById(Long id);
+    Optional<User> findUserByEmail(String email);
+    Optional<User> findUserById(Long id);
 }

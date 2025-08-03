@@ -29,11 +29,15 @@ public class ConstantsErrorMessage {
     /**Restaurant*/
     public static final String RESTAURANT_NOT_FOUND = "This restaurant doesn't exist in the system";
     public static final String RESTAURANT_NOT_SAVED = "Restaurant not saved in the system";
+    public static final String INVALID_FORMAT_NIT = "NIT has an invalid format";
+    public static final String INVALID_FORMAT_PHONE = "Phone has an invalid format";
+
 
     /**Constants to logs*/
     public static final String START_FLOW = "Start flow";
     public static final String START_VALIDATE_CREATOR_USER = "Start to validate creator user";
     public static final String START_VALIDATE_OWNER = "Start to validate owner user";
+    public static final String END_VALIDATE_OWNER = "End to validate owner user";
     public static final String START_PROCESS_TO_VALIDATE_CONDITION = "Start process to validate requirements";
     public static final String END_SUCCESSFUL_FLOW = "End flow successful";
     public static final String START_TO_CREATE_OWNER = "Start process to create a new owner";
@@ -53,6 +57,6 @@ public class ConstantsErrorMessage {
     public static final String BEARER_PREFIX = "Bearer ";
     public static final int BEARER_SUBSTRING = 7;
     public static final String UNAUTHORIZED_OPERATION = "unauthorized to do this operation";
-
+    public static final String USER_NOT_FOUD = "User not found in the system";
 
 }

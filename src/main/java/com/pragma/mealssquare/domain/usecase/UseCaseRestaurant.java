@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Slf4j
 public class UseCaseRestaurant implements IRestaurantServicePort {
@@ -26,8 +28,10 @@ public class UseCaseRestaurant implements IRestaurantServicePort {
     @Override
     public void saveRestaurants(Restaurant restaurant) {
         log.info(ConstantsErrorMessage.START_FLOW);
-        User userOwnerRestaurant = iRestaurantPersistencePort.getUserById(restaurant.getIdOwner());
+        User userOwnerRestaurant = iRestaurantPersistencePort.findUserById(restaurant.getIdOwner())
+                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.USER_NOT_FOUD));
         ValidatorClasses.validateOwner(userOwnerRestaurant);
+        log.info(ConstantsErrorMessage.END_VALIDATE_OWNER);
         processValidateSaveRestaurant(restaurant);
     }
 
@@ -36,22 +40,28 @@ public class UseCaseRestaurant implements IRestaurantServicePort {
         restaurant.setNameRestaurant(ValidatorClasses.validateRestaurantName(restaurant.getNameRestaurant())
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.INVALID_RESTAURANT_NAME_FORMAT)));
         restaurant.setNit(ValidatorClasses.validateNitNumber(restaurant.getNit())
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.INVALID_DATA_FORMAT)));
+                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.INVALID_FORMAT_NIT)));
         restaurant.setPhoneNumberRestaurant(ValidatorClasses.validatePhoneNumber(restaurant.getPhoneNumberRestaurant())
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.INVALID_DATA_FORMAT)));
+                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.INVALID_FORMAT_PHONE)));
         restaurant.setAddressRestaurant(ValidatorClasses.sanitize(restaurant.getAddressRestaurant())
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL)));
         restaurant.setUrlLogo(ValidatorClasses.sanitize(restaurant.getUrlLogo())
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL)));
-        iRestaurantPersistencePort.saveRestaurant(restaurant);
+        iRestaurantPersistencePort.save(restaurant);
         log.info(ConstantsErrorMessage.END_SUCCESSFUL_FLOW);
     }
 
     @Override
     public Restaurant getRestaurantByNit(String nitRestaurant) {
-        return ValidatorClasses.sanitize(nitRestaurant)
-                .map(iRestaurantPersistencePort::getRestaurantByNit)
+        String nitSatinized = ValidatorClasses.sanitize(nitRestaurant)
+                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL));
+        return iRestaurantPersistencePort.findRestaurantByNit(nitSatinized)
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.RESTAURANT_NOT_FOUND));
+    }
+
+    @Override
+    public Restaurant getRestaurantById(Long idRestaurant) {
+        return null;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.pragma.mealssquare.domain.validator;
 
-import com.pragma.mealssquare.domain.model.Dish;
-import com.pragma.mealssquare.domain.model.Rol;
 import com.pragma.mealssquare.domain.model.TypeRolEnum;
 import com.pragma.mealssquare.domain.model.User;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
@@ -11,10 +9,10 @@ import java.util.Optional;
 
 public class ValidatorClasses {
 
-    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
-    private static final String PHONE_REGEX = "^\\+?[0-9]{1,13}$";
-    private static final String NUMERIC_NIT_REGEX = "^[0-9]+$";
-    private static final String RESTAURANT_NAME_REGEX = "^[0-9]+$";
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.com(\\.co)?$";
+    private static final String PHONE_REGEX = "^\\+57\\d{10}$";
+    private static final String NUMERIC_NIT_REGEX = "^\\d+$";
+    private static final String RESTAURANT_NAME_REGEX = "^(?!\\d+$).+";
 
     private ValidatorClasses(){}
 
@@ -45,7 +43,7 @@ public class ValidatorClasses {
     /**Regex to validate the restaurant name format*/
     public static Optional<String> validateRestaurantName(String name){
         return sanitize(name)
-                .filter(n -> !n.matches(RESTAURANT_NAME_REGEX));
+                .filter(n -> n.matches(RESTAURANT_NAME_REGEX));
     }
 
 
@@ -56,9 +54,7 @@ public class ValidatorClasses {
     }
 
     public static void validateOwner(User user) {
-        Optional.ofNullable(user)
-                .filter(u -> u.getRol() != null && TypeRolEnum.OWNER.name().equals(u.getRol().getNameRol()))
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.IS_NOT_OWNER_ROLE));
+        if (user.getRol() == null || !TypeRolEnum.OWNER.name().equals(user.getRol().getNameRol())) throw new CustomException(ConstantsErrorMessage.IS_NOT_OWNER_ROLE);
     }
 
     public static double validatePriceDish(double price){

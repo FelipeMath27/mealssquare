@@ -22,7 +22,6 @@ public class UseCaseDish implements IDishServicePort {
     private final IRestaurantPersistencePort iRestaurantPersistencePort;
     private final ICategoryPersistencePort iCategoryPersistencePort;
 
-
     @Override
     public void saveNewDish(Dish dish) {
         log.info(ConstantsErrorMessage.START_FLOW);
@@ -46,7 +45,7 @@ public class UseCaseDish implements IDishServicePort {
     private void validateRestaurantExist(Restaurant restaurant){
         Optional.ofNullable(restaurant)
                 .map(res -> {
-                    return iRestaurantPersistencePort.getRestaurantById(res.getIdRestaurant());
+                    return iRestaurantPersistencePort.findUserById(res.getIdRestaurant());
                 })
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.RESTAURANT_NOT_FOUND));
     }
