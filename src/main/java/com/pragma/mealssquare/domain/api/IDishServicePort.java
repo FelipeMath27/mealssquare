@@ -8,7 +8,7 @@ public interface IDishServicePort {
 
     Dish getDishById(Long id);
 
-    void updateDish(Dish dish);
+    void updateDish(Dish dish, String email);
 
     void updateDishStatus(Dish dish, User user);
 }

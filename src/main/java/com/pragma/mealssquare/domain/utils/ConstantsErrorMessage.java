@@ -28,6 +28,7 @@ public class ConstantsErrorMessage {
     public static final String DISH_NAME_CANT_BE_NULL = "Dish name can't be null";
     public static final String DISH_DESCRIPTION_CANT_BE_NULL = "Dish description can't be null";
     public static final String DISH_URL_CANT_BE_NULL = "Dish url can't be null";
+    public static final String INCORRECT_OWNER_TO_UPDATE = "You are not the restaurant owner of this dish";
 
     /**Restaurant*/
     public static final String RESTAURANT_NOT_FOUND = "This restaurant doesn't exist in the system";

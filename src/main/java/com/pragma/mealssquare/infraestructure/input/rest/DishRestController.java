@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -20,6 +21,8 @@ public class DishRestController {
     private final IDishHandler iDishHandler;
     private final IJwtTokenProvider iJwtTokenProvider;
 
+    private String email;
+
     @PostMapping("/create-dish")
     public ResponseEntity<Void> saveDish(@RequestBody DishDTORequest dishDTORequest){
         log.info("{}",dishDTORequest);
@@ -28,8 +31,9 @@ public class DishRestController {
     }
 
     @PatchMapping("/update-dish")
-    public ResponseEntity<Void> updateDish(@RequestBody DishUpdateDTORequest dishUpdateDTORequest){
-        iDishHandler.updateDish(dishUpdateDTORequest);
+    public ResponseEntity<Void> updateDish(@RequestBody DishUpdateDTORequest dishUpdateDTORequest, Authentication authentication){
+        email = authentication.getName();
+        iDishHandler.updateDish(dishUpdateDTORequest, email);
         return ResponseEntity.noContent().build();
     }
 

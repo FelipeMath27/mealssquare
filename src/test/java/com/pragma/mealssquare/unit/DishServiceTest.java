@@ -50,7 +50,7 @@ class DishServiceTest {
                 "+57323231", LocalDate.of(1992, 9, 8), "tania@gmail.com",
                 "0000", rol);
         restaurant = new Restaurant(1L, "RestaurantName", "RestaurantAddress",
-                user.getRol().getIdRol(), "+57321312", "www.uno.com", "123456789");
+                user.getIdUser(), "+57321312", "www.uno.com", "123456789");
         newDish = new Dish(1L,"Vegetarina Pizza", category,"pizza with mushrooms, onion, cheese and tomato"
                 ,10.0, restaurant,"www.pizza.com",null);
         when(iRestaurantPersistencePort.findUserByEmail(user.getEmail())).thenReturn(Optional.ofNullable(user));
@@ -109,36 +109,44 @@ class DishServiceTest {
 
     /** Start test to update dish*/
     @Test
-    void test_validate_correct_update_dish(){
+    void test_update_dish(){
         newDish.setPriceDish(14.5);
         newDish.setDishDescription("This updated is for an extra meet in the pizza");
-        useCaseDish.updateDish(newDish);
-        verify(iDishPersistencePort,times(1)).save(any(Dish.class));
+        useCaseDish.updateDish(newDish,"tania@gmail.com");
+        verify(iDishPersistencePort,times(1)).save(argThat(updatedDish ->
+                updatedDish.getIdDish().equals(newDish.getIdDish()) &&
+                updatedDish.getDishDescription().equals("This updated is for an extra meet in the pizza") &&
+                updatedDish.getPriceDish().equals(14.5)
+                ));
     }
 
     @Test
     void test_validate_correct_update_dish_by_price(){
         newDish.setPriceDish(14.5);
-        useCaseDish.updateDish(newDish);
+        useCaseDish.updateDish(newDish,"tania@gmail.com");
         verify(iDishPersistencePort,times(1)).save(any(Dish.class));
     }
 
     @Test
     void test_validate_correct_update_dish_by_description(){
         newDish.setDishDescription("This updated is for an extra meet in the pizza");
-        useCaseDish.updateDish(newDish);
+        useCaseDish.updateDish(newDish, "tania@gmail.com");
         verify(iDishPersistencePort,times(1)).save(any(Dish.class));
     }
 
     @Test
     void test_not_found_dish_to_update(){
-        newDish.setIdDish(2L);
-        when(iDishPersistencePort.findById(newDish.getIdDish())).thenReturn(null);
-        CustomException catchException = assertThrows(CustomException.class,
-                ()-> useCaseDish.updateDish(newDish));
-
-        assertEquals(ConstantsErrorMessage.DISH_NOT_FOUND,catchException.getMessage());
-        verify(iDishPersistencePort,never()).save(newDish);
+        when(iDishPersistencePort.findById(newDish.getIdDish())).thenReturn(Optional.empty());
+        customException = assertThrows(CustomException.class, ()-> useCaseDish.updateDish(newDish,"tania@gmail.com"));
+        assertEquals(ConstantsErrorMessage.DISH_NOT_FOUND,customException.getMessage());
+        verify(iDishPersistencePort,never()).save(any(Dish.class));
     }
 
+    @Test
+    void test_update_dish_non_owner_restaurant_dish(){
+        newDish.getRestaurant().setIdOwner(10L);
+        customException = assertThrows(CustomException.class, () -> useCaseDish.updateDish(newDish,"tania@gmail.com"));
+        assertEquals(ConstantsErrorMessage.INCORRECT_OWNER_TO_UPDATE,customException.getMessage());
+        verify(iDishPersistencePort,never()).save(any(Dish.class));
+    }
 }

@@ -36,8 +36,8 @@ public class DishHandler implements IDishHandler{
     }
 
     @Override
-    public void updateDish(DishUpdateDTORequest dishUpdateDTORequest) {
-        iDishServicePort.updateDish(iDishRequestMapper.toDishUpdate(dishUpdateDTORequest));
+    public void updateDish(DishUpdateDTORequest dishUpdateDTORequest, String email) {
+        iDishServicePort.updateDish(iDishRequestMapper.toDishUpdate(dishUpdateDTORequest),email);
     }
 
     @Override

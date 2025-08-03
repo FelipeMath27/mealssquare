@@ -54,45 +54,34 @@ public class UseCaseDish implements IDishServicePort {
         iDishPersistencePort.save(newDish);
     }
 
-    /**@Override
-    public void updateDishStatus(Dish dish, User user) {
+    @Override
+    public void updateDish(Dish dish, String email) {
         log.info(ConstantsErrorMessage.START_FLOW);
-        Optional<Dish> getDish = iDishPersistencePort.findById(dish.getIdDish());
-        validateOwnerUpdateDish();
+        Dish dishExist = validateExistDish(dish.getIdDish());
+        validateOwnerUpdateDish(dishExist,email);
+        dishExist.setPriceDish(ValidatorClasses.validatePriceDish(dish.getPriceDish()));
+        dishExist.setDishDescription(ValidatorClasses.sanitize(dish.getDishDescription())
+                        .orElseThrow(() -> new CustomException(ConstantsErrorMessage.DISH_DESCRIPTION_CANT_BE_NULL)));
+        iDishPersistencePort.save(dishExist);
     }
 
-    private void validateOwnerUpdateDish(Restaurant restaurant, Long idUser) {
-        Optional.ofNullable(restaurant)
-                .map(Restaurant::getIdOwner)
-                .filter(idOwner->idOwner.equals(idUser))
-                .orElseThrow(()-> new CustomException(ConstantsErrorMessage.UNAUTHORIZED_OPERATION));
-    }
-
-    private void processToUpdateDish(Dish existDish, Dish newDish) {
-        existDish.setDishDescription(ValidatorClasses.sanitize(newDish.getDishDescription())
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL)));
-        existDish.setPriceDish(ValidatorClasses.validatePriceDish(newDish.getPriceDish()));
-        iDishPersistencePort.save(existDish);
-    }
-
-
-    private Optional<Dish> validateExistDish(Dish dish) {
+    private Dish validateExistDish(Long idDish) {
         log.info(ConstantsErrorMessage.VALIDATE_EXIST_DISH);
-        return Optional.ofNullable(dish)
-                .map(Dish::getIdDish)
-                .map(iDishPersistencePort::findById)
+        return iDishPersistencePort.findById(idDish)
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.DISH_NOT_FOUND));
-    }*/
+    }
+
+    private void validateOwnerUpdateDish(Dish dish, String email) {
+        User user = iRestaurantPersistencePort.findUserByEmail(email)
+                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.USER_NOT_FOUD));
+        if(!dish.getRestaurant().getIdOwner().equals(user.getIdUser())) throw new CustomException(ConstantsErrorMessage.INCORRECT_OWNER_TO_UPDATE);
+    }
 
     @Override
     public Dish getDishById(Long idDish) {
         return null;
     }
 
-    @Override
-    public void updateDish(Dish dish) {
-        // TODO document why this method is empty
-    }
 
     @Override
     public void updateDishStatus(Dish dish, User user) {

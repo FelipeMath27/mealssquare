@@ -8,7 +8,7 @@ import com.pragma.mealssquare.application.dto.DishUpdateDTORequest;
 public interface IDishHandler {
     void saveDish (DishDTORequest dishDTORequest);
 
-    void updateDish(DishUpdateDTORequest dishUpdateDTORequest);
+    void updateDish(DishUpdateDTORequest dishUpdateDTORequest, String email);
 
     DishDTOResponse getDishDTO(Long idDish);
 
