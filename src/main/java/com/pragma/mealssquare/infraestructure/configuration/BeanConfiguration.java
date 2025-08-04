@@ -2,6 +2,7 @@ package com.pragma.mealssquare.infraestructure.configuration;
 
 import com.pragma.mealssquare.domain.api.ICategoryServicePort;
 import com.pragma.mealssquare.domain.api.IDishServicePort;
+import com.pragma.mealssquare.domain.api.IEmployeeRestaurantServicePort;
 import com.pragma.mealssquare.domain.api.IRestaurantServicePort;
 import com.pragma.mealssquare.domain.spi.ICategoryPersistencePort;
 import com.pragma.mealssquare.domain.spi.IDishPersistencePort;
@@ -42,4 +43,5 @@ public class BeanConfiguration {
     public ICategoryServicePort iCategoryServicePort(ICategoryPersistencePort iCategoryPersistencePort){
         return new UseCaseCategory(iCategoryPersistencePort);
     }
+
 }

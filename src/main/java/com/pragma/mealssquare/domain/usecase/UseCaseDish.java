@@ -58,10 +58,18 @@ public class UseCaseDish implements IDishServicePort {
     public void updateDish(Dish dish, String email) {
         log.info(ConstantsErrorMessage.START_FLOW);
         Dish dishExist = validateExistDish(dish.getIdDish());
-        validateOwnerUpdateDish(dishExist,email);
-        dishExist.setPriceDish(ValidatorClasses.validatePriceDish(dish.getPriceDish()));
-        dishExist.setDishDescription(ValidatorClasses.sanitize(dish.getDishDescription())
-                        .orElseThrow(() -> new CustomException(ConstantsErrorMessage.DISH_DESCRIPTION_CANT_BE_NULL)));
+        validateOwnerUpdateDish(dishExist, email);
+
+        if (dish.getPriceDish() != null) {
+            dishExist.setPriceDish(ValidatorClasses.validatePriceDish(dish.getPriceDish()));
+        }
+        if (dish.getDishDescription() != null) {
+            dishExist.setDishDescription(
+                    ValidatorClasses.sanitize(dish.getDishDescription())
+                            .orElseThrow(() -> new CustomException(ConstantsErrorMessage.DISH_DESCRIPTION_CANT_BE_NULL))
+            );
+        }
+
         iDishPersistencePort.save(dishExist);
     }
 

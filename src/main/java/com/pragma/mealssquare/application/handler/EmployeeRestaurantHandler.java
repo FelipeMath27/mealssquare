@@ -1,5 +1,5 @@
 package com.pragma.mealssquare.application.handler;
-
+/**
 import com.pragma.mealssquare.application.dto.UserEmployeeDTORequest;
 import com.pragma.mealssquare.application.mapper.IEmployeeRestaurantRequestMapper;
 import com.pragma.mealssquare.domain.api.IEmployeeRestaurantServicePort;
@@ -24,4 +24,4 @@ public class EmployeeRestaurantHandler implements IEmployeeRestaurantHandler{
         EmployeeRestaurant employeeRestaurant = iEmployeeRestaurantRequestMapper.toEmployeeRestaurant(userEmployeeDTORequest.getEmployeeDTORequest());
         iEmployeeRestaurantServicePort.saveEmployee(user,employeeRestaurant);
     }
-}
+}*/

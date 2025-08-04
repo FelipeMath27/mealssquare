@@ -62,5 +62,8 @@ public class ConstantsErrorMessage {
     public static final int BEARER_SUBSTRING = 7;
     public static final String UNAUTHORIZED_OPERATION = "unauthorized to do this operation";
     public static final String USER_NOT_FOUD = "User not found in the system";
+    public static final String PASSWORD_CANNOT_BE_EMPTY = "Password cannot be null or empty";
+
+
 
 }

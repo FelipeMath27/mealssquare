@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.pragma.mealssquare.infraestructure.feign")
 public class MealssquareApplication {
 
 	public static void main(String[] args) {

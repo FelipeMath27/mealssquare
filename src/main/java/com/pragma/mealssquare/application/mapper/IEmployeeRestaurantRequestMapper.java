@@ -1,5 +1,5 @@
 package com.pragma.mealssquare.application.mapper;
-
+/**
 import com.pragma.mealssquare.application.dto.EmployeeDTORequest;
 import com.pragma.mealssquare.application.dto.UserDTORequest;
 import com.pragma.mealssquare.application.dto.UserEmployeeDTORequest;
@@ -16,4 +16,4 @@ public interface IEmployeeRestaurantRequestMapper {
 
     EmployeeRestaurant toEmployeeRestaurant (EmployeeDTORequest employeeDTORequest);
 
-}
+}*/

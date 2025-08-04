@@ -18,7 +18,7 @@ public interface IUsersMealsSquare {
     Rol getRoleById(@RequestParam("id") Long idRol);
 
     @GetMapping("users/id/{idUser}")
-    User getUserById(@RequestParam("idUser") Long idUser);
+    User getUserById(@PathVariable("idUser") Long idUser);
 
     @PostMapping("users/create-employee")
     User createEmployee(@RequestBody UserDTORequest userEmployeeDTORequest);
