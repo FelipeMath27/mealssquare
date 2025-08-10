@@ -4,13 +4,10 @@ import com.pragma.mealssquare.domain.model.Restaurant;
 import com.pragma.mealssquare.domain.model.User;
 
 public interface IRestaurantServicePort {
-    void saveRestaurants (Restaurant restaurant);
+    void saveRestaurants (Restaurant restaurant, User user);
 
     Restaurant getRestaurantByNit(String nitRestaurant);
 
     Restaurant getRestaurantById(Long idRestaurant);
 
-    User getUserByEmail(String email);
-
-    User getUserById(Long id);
 }

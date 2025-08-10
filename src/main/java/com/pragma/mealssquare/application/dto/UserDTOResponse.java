@@ -1,9 +1,7 @@
 package com.pragma.mealssquare.application.dto;
 
+import com.pragma.mealssquare.domain.model.Rol;
 import com.pragma.mealssquare.domain.model.TypeDocumentEnum;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,23 +11,14 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserDTORequest {
-    @NotBlank
+public class UserDTOResponse {
+    private Long idUser;
     private String nameUser;
-    @NotBlank
     private String lastNameUser;
-    @NotNull
     private TypeDocumentEnum typeDocumentUser;
-    @NotBlank
     private String documentUser;
-    @NotBlank
     private String phoneNumberUser;
-    @NotNull
     private LocalDate dateBirthUser;
-    @Email
     private String email;
-    @NotBlank
-    private String password;
-    @NotBlank
-    private String nameRol;
+    private RolDTOResponse rolDTOResponse;
 }

@@ -1,7 +1,7 @@
 package com.pragma.mealssquare.infraestructure.output.adapter;
 
+import com.pragma.mealssquare.application.dto.UserDTOResponse;
 import com.pragma.mealssquare.domain.model.Restaurant;
-import com.pragma.mealssquare.domain.model.User;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.infraestructure.exceptions.InfrastructureException;
@@ -50,14 +50,14 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) {
+    public Optional<UserDTOResponse> findUserByEmail(String email) {
         return Optional.ofNullable(Optional.ofNullable(email)
                 .map(iUsersMealsSquare::getUserByEmail)
                 .orElseThrow(() -> new MicroserviceConnectionException(ConstantsErrorMessage.CANT_CONNECT_MICROSERVICES)));
     }
 
     @Override
-    public Optional<User> findUserById(Long id) {
+    public Optional<UserDTOResponse> findUserById(Long id) {
         return Optional.ofNullable(Optional.ofNullable(id)
                 .map(iUsersMealsSquare::getUserById)
                 .orElseThrow(() -> new MicroserviceConnectionException(ConstantsErrorMessage.CANT_CONNECT_MICROSERVICES)));

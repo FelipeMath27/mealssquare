@@ -4,10 +4,10 @@ import com.pragma.mealssquare.domain.api.IDishServicePort;
 import com.pragma.mealssquare.domain.model.*;
 import com.pragma.mealssquare.domain.spi.ICategoryPersistencePort;
 import com.pragma.mealssquare.domain.spi.IDishPersistencePort;
-import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 
 import com.pragma.mealssquare.domain.validator.ValidatorClasses;
+import com.pragma.mealssquare.domain.validator.ValidatorService;
 import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 public class UseCaseDish implements IDishServicePort {
 
     private final IDishPersistencePort iDishPersistencePort;
-    private final IRestaurantPersistencePort iRestaurantPersistencePort;
     private final ICategoryPersistencePort iCategoryPersistencePort;
+    private final ValidatorService validatorService;
+
 
     @Override
     public void saveDish(Dish dish) {
         log.info(ConstantsErrorMessage.START_FLOW);
         validateCategory(dish);
-        validateRestaurantExist(dish.getRestaurant());
+        validatorService.validateRestaurantExist(dish.getRestaurant());
         processToValidateNewDish(dish);
     }
 
@@ -33,12 +34,6 @@ public class UseCaseDish implements IDishServicePort {
         Long idCategory = dish.getCategory().getIdCategory() != null ? dish.getCategory().getIdCategory() : null;
         iCategoryPersistencePort.findById(idCategory)
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CATEGORY_NOT_FOUND));
-    }
-
-    private void validateRestaurantExist(Restaurant restaurant){
-        Long idRestaurant = restaurant.getIdRestaurant() != null ? restaurant.getIdRestaurant() : null;
-        iRestaurantPersistencePort.findRestaurantById(idRestaurant)
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.RESTAURANT_NOT_FOUND));
     }
 
     private void processToValidateNewDish(Dish newDish) {
@@ -54,12 +49,13 @@ public class UseCaseDish implements IDishServicePort {
         iDishPersistencePort.save(newDish);
     }
 
+
     @Override
-    public void updateDish(Dish dish, String email) {
+    public void updateDish(User user, Dish dish) {
         log.info(ConstantsErrorMessage.START_FLOW);
         Dish dishExist = validateExistDish(dish.getIdDish());
-        validateOwnerUpdateDish(dishExist, email);
-
+        validateOwnerUpdateDish(user,dishExist);
+        validatorService.validateRestaurantExist(dish.getRestaurant());
         if (dish.getPriceDish() != null) {
             dishExist.setPriceDish(ValidatorClasses.validatePriceDish(dish.getPriceDish()));
         }
@@ -79,10 +75,8 @@ public class UseCaseDish implements IDishServicePort {
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.DISH_NOT_FOUND));
     }
 
-    private void validateOwnerUpdateDish(Dish dish, String email) {
-        User user = iRestaurantPersistencePort.findUserByEmail(email)
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.USER_NOT_FOUD));
-        if(!dish.getRestaurant().getIdOwner().equals(user.getIdUser())) throw new CustomException(ConstantsErrorMessage.INCORRECT_OWNER_TO_UPDATE);
+    private void validateOwnerUpdateDish(User user, Dish dish) {
+        if(!user.getIdUser().equals(dish.getRestaurant().getIdOwner())) throw new CustomException(ConstantsErrorMessage.INCORRECT_OWNER_TO_UPDATE);
     }
 
     @Override

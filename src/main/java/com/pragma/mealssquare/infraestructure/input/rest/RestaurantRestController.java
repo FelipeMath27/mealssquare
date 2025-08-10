@@ -2,6 +2,7 @@ package com.pragma.mealssquare.infraestructure.input.rest;
 
 import com.pragma.mealssquare.application.dto.RestaurantDTORequest;
 import com.pragma.mealssquare.application.handler.IRestaurantHandler;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class RestaurantRestController {
     }
 
     @PostMapping("/create-restaurant")
-    public ResponseEntity<Void> createRestaurant(@RequestBody RestaurantDTORequest restaurantDTORequest){
+    public ResponseEntity<Void> createRestaurant(@Valid @RequestBody RestaurantDTORequest restaurantDTORequest){
         iRestaurantHandler.saveListRestaurant(restaurantDTORequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

@@ -4,8 +4,12 @@ import com.pragma.mealssquare.domain.model.TypeRolEnum;
 import com.pragma.mealssquare.domain.model.User;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
+
+
 
 public class ValidatorClasses {
 
@@ -14,7 +18,6 @@ public class ValidatorClasses {
     private static final String NUMERIC_NIT_REGEX = "^\\d+$";
     private static final String RESTAURANT_NAME_REGEX = "^(?!\\d+$).+";
 
-    private ValidatorClasses(){}
 
     /** This method sanitized any string*/
     public static Optional<String> sanitize(String input) {
@@ -61,6 +64,11 @@ public class ValidatorClasses {
         return Optional.of(price)
                 .filter(pr -> pr > ConstantsErrorMessage.MIN_PRICE_DISH)
                 .orElseThrow(() -> new CustomException(ConstantsErrorMessage.PRICE_MUST_BE_GREATER_THAN));
+    }
+
+    public static void validateNotNullId(Long id, String errorMessage) {
+        Optional.ofNullable(id)
+                .orElseThrow(() -> new CustomException(errorMessage));
     }
 
 }

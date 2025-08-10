@@ -29,6 +29,7 @@ public class ConstantsErrorMessage {
     public static final String DISH_DESCRIPTION_CANT_BE_NULL = "Dish description can't be null";
     public static final String DISH_URL_CANT_BE_NULL = "Dish url can't be null";
     public static final String INCORRECT_OWNER_TO_UPDATE = "You are not the restaurant owner of this dish";
+    public static final String INCORRECT_OWNER_TO_CREATE_EMPLOYEE = "You are not the restaurant owner to create an employee";
 
     /**Restaurant*/
     public static final String RESTAURANT_NOT_FOUND = "This restaurant doesn't exist in the system";
@@ -36,6 +37,10 @@ public class ConstantsErrorMessage {
     public static final String INVALID_FORMAT_NIT = "NIT has an invalid format";
     public static final String INVALID_FORMAT_PHONE = "Phone has an invalid format";
 
+    /**Employee*/
+    public static final String CANT_SAVE_EMPLOYEE = "Can't persist the new employee in the system";
+    public static final String CREATING_EMPLOYEE = "Start process to create an employee";
+    public static final String USER_ID_NOT_FOUND = "User id not found in the system";
 
     /**Constants to logs*/
     public static final String START_FLOW = "Start flow";
@@ -64,6 +69,9 @@ public class ConstantsErrorMessage {
     public static final String USER_NOT_FOUD = "User not found in the system";
     public static final String PASSWORD_CANNOT_BE_EMPTY = "Password cannot be null or empty";
 
+    /**Employee*/
+    public static final String START_FLOW_TO_CREATE_EMPLOYEE = "Start flow to create an employee";
 
-
+    private ConstantsErrorMessage(){}
+        // Private constructor to prevent instantiation
 }

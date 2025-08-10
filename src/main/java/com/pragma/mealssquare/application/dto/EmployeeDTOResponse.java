@@ -2,21 +2,20 @@ package com.pragma.mealssquare.application.dto;
 
 import com.pragma.mealssquare.domain.model.StatusEmployee;
 import com.pragma.mealssquare.domain.model.TypePositionEmployee;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class EmployeeDTORequest {
-    @NotNull
-    private Long idRestaurant;
-
-    @NotNull
+public class EmployeeDTOResponse {
+    private Long idEmployee;
+    private Long idUser;
+    private LocalDate entryDate;
+    private RestaurantDTOResponse restaurantDTOResponse;
     private TypePositionEmployee typePositionEmployee;
+    private StatusEmployee statusEmployee;
 }

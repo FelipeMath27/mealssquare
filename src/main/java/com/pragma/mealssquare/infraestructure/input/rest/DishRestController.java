@@ -21,8 +21,6 @@ public class DishRestController {
     private final IDishHandler iDishHandler;
     private final IJwtTokenProvider iJwtTokenProvider;
 
-    private String email;
-
     @PostMapping("/create-dish")
     public ResponseEntity<Void> saveDish(@RequestBody DishDTORequest dishDTORequest){
         log.info("{}",dishDTORequest);
@@ -32,7 +30,7 @@ public class DishRestController {
 
     @PatchMapping("/update-dish")
     public ResponseEntity<Void> updateDish(@RequestBody DishUpdateDTORequest dishUpdateDTORequest, Authentication authentication){
-        email = authentication.getName();
+        String email = authentication.getName();
         iDishHandler.updateDish(dishUpdateDTORequest, email);
         return ResponseEntity.noContent().build();
     }

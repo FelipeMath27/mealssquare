@@ -25,12 +25,11 @@ public class UseCaseRestaurant implements IRestaurantServicePort {
 
     private final IRestaurantPersistencePort iRestaurantPersistencePort;
 
+
     @Override
-    public void saveRestaurants(Restaurant restaurant) {
+    public void saveRestaurants(Restaurant restaurant, User user) {
         log.info(ConstantsErrorMessage.START_FLOW);
-        User userOwnerRestaurant = iRestaurantPersistencePort.findUserById(restaurant.getIdOwner())
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.USER_NOT_FOUD));
-        ValidatorClasses.validateOwner(userOwnerRestaurant);
+        ValidatorClasses.validateOwner(user);
         log.info(ConstantsErrorMessage.END_VALIDATE_OWNER);
         processValidateSaveRestaurant(restaurant);
     }
@@ -64,13 +63,4 @@ public class UseCaseRestaurant implements IRestaurantServicePort {
         return null;
     }
 
-    @Override
-    public User getUserByEmail(String email) {
-        return null;
-    }
-
-    @Override
-    public User getUserById(Long id) {
-        return null;
-    }
 }

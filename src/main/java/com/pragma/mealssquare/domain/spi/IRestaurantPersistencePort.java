@@ -1,7 +1,7 @@
 package com.pragma.mealssquare.domain.spi;
 
+import com.pragma.mealssquare.application.dto.UserDTOResponse;
 import com.pragma.mealssquare.domain.model.Restaurant;
-import com.pragma.mealssquare.domain.model.User;
 
 import java.util.Optional;
 
@@ -12,6 +12,6 @@ public interface IRestaurantPersistencePort {
 
     Optional<Restaurant> findRestaurantById(Long idRestaurant);
 
-    Optional<User> findUserByEmail(String email);
-    Optional<User> findUserById(Long id);
+    Optional<UserDTOResponse> findUserByEmail(String email);
+    Optional<UserDTOResponse> findUserById(Long id);
 }
