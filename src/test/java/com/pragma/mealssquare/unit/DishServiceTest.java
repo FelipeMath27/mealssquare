@@ -48,7 +48,7 @@ class DishServiceTest {
     @InjectMocks
     private UseCaseDish useCaseDish;
 
-    private Dish newDish;
+    private Dish newDish,dishUpadated;
     private User user;
     private Category category;
     private Restaurant restaurant;
@@ -65,7 +65,9 @@ class DishServiceTest {
         restaurant = new Restaurant(1L, "RestaurantName", "RestaurantAddress",
                 user.getIdUser(), "+57321312", "www.uno.com", "123456789");
         newDish = new Dish(1L,"Vegetarina Pizza", category,"pizza with mushrooms, onion, cheese and tomato"
-                ,10.0, restaurant,"www.pizza.com",null);
+                ,10.0, restaurant,"www.pizza.com",StatusDish.INA);
+        dishUpadated = new Dish(1L,null, null, null
+                ,null, null,null,StatusDish.ACT);
         when(iUserFeignHandler.getUserByEmail(user.getEmail())).thenReturn(new UserDTOResponse());
         when(iUserResponseMapper.toUser(any(UserDTOResponse.class))).thenReturn(user);
         when(iCategoryPersistencePort.findById(category.getIdCategory())).thenReturn(Optional.ofNullable(category));
@@ -161,5 +163,26 @@ class DishServiceTest {
         customException = assertThrows(CustomException.class, () -> useCaseDish.updateDish(user,newDish));
         assertEquals(ConstantsErrorMessage.INCORRECT_OWNER_TO_UPDATE,customException.getMessage());
         verify(iDishPersistencePort,never()).save(any(Dish.class));
+    }
+
+    /** Start test to update status dish */
+    @Test
+    void test_update_status_dish_active(){
+        useCaseDish.updateDishStatus(user,dishUpadated);
+        verify(iDishPersistencePort,times(1)).save(argThat(updatedDish ->
+                updatedDish.getIdDish().equals(dishUpadated.getIdDish()) &&
+                updatedDish.getStatusDish().equals(StatusDish.ACT)
+        ));
+    }
+
+    @Test
+    void test_update_status_dish_inactive(){
+        newDish.setStatusDish(StatusDish.ACT);
+        dishUpadated.setStatusDish(StatusDish.INA);
+        useCaseDish.updateDishStatus(user,dishUpadated);
+        verify(iDishPersistencePort,times(1)).save(argThat(updatedDish ->
+                updatedDish.getIdDish().equals(dishUpadated.getIdDish()) &&
+                updatedDish.getStatusDish().equals(StatusDish.INA)
+        ));
     }
 }

@@ -54,6 +54,12 @@ public class DishHandler implements IDishHandler{
 
     @Override
     public void updateStatusDish(DishDTOStatusRequest dishDTOStatusRequest, String emailOwner) {
-
+        User userOwner;
+        try {
+            userOwner = iUserResponseMapper.toUser(iUserFeignHandler.getUserByEmail(emailOwner));
+        } catch (UsernameNotFoundException ex) {
+            throw new InfrastructureException(ConstantsErrorMessage.USER_NOT_FOUD, ex);
+        }
+        iDishServicePort.updateDishStatus(userOwner,iDishRequestMapper.toDishStatusUpdate(dishDTOStatusRequest));
     }
 }

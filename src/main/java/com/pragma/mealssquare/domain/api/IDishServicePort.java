@@ -10,5 +10,5 @@ public interface IDishServicePort {
 
     void updateDish(User user,Dish dish);
 
-    void updateDishStatus(Dish dish, User user);
+    void updateDishStatus(User user,Dish dish);
 }

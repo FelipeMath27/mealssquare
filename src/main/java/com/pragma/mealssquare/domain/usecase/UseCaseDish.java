@@ -12,6 +12,9 @@ import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
+import java.util.Optional;
+
 
 @RequiredArgsConstructor
 @Slf4j
@@ -86,7 +89,15 @@ public class UseCaseDish implements IDishServicePort {
 
 
     @Override
-    public void updateDishStatus(Dish dish, User user) {
-        // TODO document why this method is empty
+    public void updateDishStatus(User user,Dish dish) {
+        Dish updateDish = validateExistDish(dish.getIdDish());
+        validateOwnerUpdateDish(user,updateDish);
+        Optional.ofNullable(dish.getStatusDish())
+                .filter(newStatus -> !Objects.equals(newStatus, updateDish.getStatusDish()))
+                .map(newStatus -> {
+                    updateDish.setStatusDish(newStatus);
+                    return updateDish;
+                })
+                .ifPresent(iDishPersistencePort::save);
     }
 }

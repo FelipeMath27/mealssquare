@@ -29,6 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/meals-square/create-restaurant").hasRole(TypeRolEnum.ADMIN.name())
                         .requestMatchers("/dish/create-dish").hasRole(TypeRolEnum.OWNER.name())
                         .requestMatchers("/dish/update-dish").hasRole(TypeRolEnum.OWNER.name())
+                        .requestMatchers("/dish/status-dish").hasRole(TypeRolEnum.OWNER.name())
                         .requestMatchers("/employee/create-employee").hasRole(TypeRolEnum.OWNER.name())
                         .anyRequest().authenticated()
                 )

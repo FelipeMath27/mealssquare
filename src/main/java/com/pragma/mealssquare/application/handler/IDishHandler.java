@@ -12,5 +12,5 @@ public interface IDishHandler {
 
     DishDTOResponse getDishDTO(Long idDish);
 
-    void updateStatusDish(DishDTOStatusRequest dishDTOStatusRequest, String token);
+    void updateStatusDish(DishDTOStatusRequest dishDTOStatusRequest, String email);
 }

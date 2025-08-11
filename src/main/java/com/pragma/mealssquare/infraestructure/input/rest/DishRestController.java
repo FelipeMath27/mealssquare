@@ -35,10 +35,10 @@ public class DishRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/status")
-    public ResponseEntity<Void> updateStatusDish(@RequestHeader("Authorization") String token,
-            @RequestBody DishDTOStatusRequest dishDTOStatusRequest){
-        iDishHandler.updateStatusDish(dishDTOStatusRequest,iJwtTokenProvider.getEmailFromToken(token));
+    @PutMapping("/status-dish")
+    public ResponseEntity<Void> updateStatusDish(@RequestBody DishDTOStatusRequest dishDTOStatusRequest, Authentication authentication){
+        iDishHandler.updateStatusDish(dishDTOStatusRequest,authentication.getName());
         return ResponseEntity.noContent().build();
     }
 }
+
