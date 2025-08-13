@@ -13,8 +13,6 @@ public class RestaurantDTOResponse {
     private Long idRestaurant;
     private String nameRestaurant;
     private String addressRestaurant;
-    private Long idOwner;
     private String phoneNumberRestaurant;
     private String urlLogo;
-    private String nit;
 }

@@ -16,11 +16,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.List;
 
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
     class RestaurantServiceTest {
@@ -105,5 +104,26 @@ import static org.mockito.Mockito.*;
         customException = assertThrows(CustomException.class, () -> useCaseRestaurant.saveRestaurants(restaurant,ownerUser));
         assertEquals(ConstantsErrorMessage.INVALID_FORMAT_NIT, customException.getMessage());
         verify(iRestaurantPersistencePort,never()).save(any(Restaurant.class));
+    }
+
+    @Test
+    void test_consult_list_restaurant( ) {
+        Restaurant restaurant2 = new Restaurant(1L, "R1", "Address1",
+                ownerUser.getIdUser(), "+573142212051", "www.r1.com", "111111111");
+
+        Restaurant restaurant3 = new Restaurant(2L, "R2", "Address2",
+                ownerUser.getIdUser(), "+573142212052", "www.r2.com", "222222222");
+
+        List<Restaurant> restaurantList = List.of(restaurant2, restaurant3);
+
+        when(iRestaurantPersistencePort.getAllRestaurants()).thenReturn(restaurantList);
+
+        List<Restaurant> result = useCaseRestaurant.getAllRestaurants();
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("R1", result.get(0).getNameRestaurant());
+        assertEquals("R2", result.get(1).getNameRestaurant());
+
+        verify(iRestaurantPersistencePort, times(1)).getAllRestaurants();
     }
 }

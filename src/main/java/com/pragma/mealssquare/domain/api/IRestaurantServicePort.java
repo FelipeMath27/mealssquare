@@ -3,6 +3,8 @@ package com.pragma.mealssquare.domain.api;
 import com.pragma.mealssquare.domain.model.Restaurant;
 import com.pragma.mealssquare.domain.model.User;
 
+import java.util.List;
+
 public interface IRestaurantServicePort {
     void saveRestaurants (Restaurant restaurant, User user);
 
@@ -10,4 +12,5 @@ public interface IRestaurantServicePort {
 
     Restaurant getRestaurantById(Long idRestaurant);
 
+    List<Restaurant> getAllRestaurants();
 }

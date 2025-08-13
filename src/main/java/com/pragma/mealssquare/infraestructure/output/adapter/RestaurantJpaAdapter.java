@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -68,5 +69,11 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
         Optional<RestaurantEntity> restaurantEntityOptional = iRestaurantRepository.findById(idRestaurant);
         return Optional.ofNullable(restaurantEntityOptional.map(restaurantEntityMapper::toRestaurant)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ConstantsErrorMessage.RESTAURANT_NOT_FOUND)));
+    }
+
+    @Override
+    public List<Restaurant> getAllRestaurants() {
+        List<RestaurantEntity> entitiesList = iRestaurantRepository.findAll();
+        return restaurantEntityMapper.toRestaurantList(entitiesList);
     }
 }

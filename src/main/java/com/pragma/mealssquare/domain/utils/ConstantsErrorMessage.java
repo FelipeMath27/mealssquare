@@ -36,6 +36,10 @@ public class ConstantsErrorMessage {
     public static final String RESTAURANT_NOT_SAVED = "Restaurant not saved in the system";
     public static final String INVALID_FORMAT_NIT = "NIT has an invalid format";
     public static final String INVALID_FORMAT_PHONE = "Phone has an invalid format";
+    public static final String START_CONSULT_LIST_RESTAURANT = "Start process to consult the list of restaurants";
+    public static final String END_CONSULT_LIST_RESTAURANT = "End process to consult the list of restaurants";
+    public static final String RESTAURANT_ALREADY_EXISTS = "This restaurant already exists in the system";
+    public static final String RESTAURANT_NAME_CANT_BE_NULL = "Restaurant name can't be null";
 
     /**Employee*/
     public static final String CANT_SAVE_EMPLOYEE = "Can't persist the new employee in the system";

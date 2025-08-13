@@ -14,5 +14,4 @@ import java.util.List;
 public interface RestaurantRequestMapper {
     Restaurant toRestaurant(RestaurantDTORequest restaurantDTORequest);
 
-    List<Restaurant> toRestaurantList(List<RestaurantDTORequest> restaurantDTORequestList);
 }

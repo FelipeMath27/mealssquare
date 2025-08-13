@@ -4,6 +4,7 @@ import com.pragma.mealssquare.application.dto.RestaurantDTORequest;
 import com.pragma.mealssquare.application.dto.RestaurantDTOResponse;
 import com.pragma.mealssquare.application.mapper.IUserResponseMapper;
 import com.pragma.mealssquare.application.mapper.RestaurantRequestMapper;
+import com.pragma.mealssquare.application.mapper.RestaurantResponseMapper;
 import com.pragma.mealssquare.domain.api.IRestaurantServicePort;
 import com.pragma.mealssquare.domain.model.Restaurant;
 
@@ -28,6 +29,7 @@ public class RestaurantHandler implements IRestaurantHandler{
     private final RestaurantRequestMapper restaurantRequestMapper;
     private final IUserFeignHandler iUserFeignHandler;
     private final IUserResponseMapper iUserResponseMapper;
+    private final RestaurantResponseMapper restaurantResponseMapper;
 
 
     @Override
@@ -44,7 +46,8 @@ public class RestaurantHandler implements IRestaurantHandler{
     }
 
     @Override
-    public List<RestaurantDTOResponse> getListRestaurantDtoResponses(List<Restaurant> restaurantList) {
-        return List.of();
+    public List<RestaurantDTOResponse> getListRestaurantDtoResponses() {
+        List<Restaurant> restaurantList = iRestaurantServicePort.getAllRestaurants();
+        return restaurantResponseMapper.toRestaurantDtoList(restaurantList);
     }
 }

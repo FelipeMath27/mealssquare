@@ -31,6 +31,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+                        .requestMatchers("/meals-square/list-restaurants").permitAll()
                         .requestMatchers("/meals-square/create-restaurant").hasRole(TypeRolEnum.ADMIN.name())
                         .requestMatchers("/dish/create-dish").hasRole(TypeRolEnum.OWNER.name())
                         .requestMatchers("/dish/update-dish").hasRole(TypeRolEnum.OWNER.name())
