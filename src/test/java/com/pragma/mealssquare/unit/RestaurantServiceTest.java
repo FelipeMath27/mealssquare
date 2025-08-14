@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -107,23 +108,32 @@ import static org.mockito.Mockito.*;
     }
 
     @Test
-    void test_consult_list_restaurant( ) {
-        Restaurant restaurant2 = new Restaurant(1L, "R1", "Address1",
+    void test_consult_list_restaurant_with_pagination_10_per_page( ) {
+        Restaurant restaurant1 = new Restaurant(1L, "R1", "Address1",
                 ownerUser.getIdUser(), "+573142212051", "www.r1.com", "111111111");
-
-        Restaurant restaurant3 = new Restaurant(2L, "R2", "Address2",
+        Restaurant restaurant2 = new Restaurant(2L, "R2", "Address2",
                 ownerUser.getIdUser(), "+573142212052", "www.r2.com", "222222222");
 
-        List<Restaurant> restaurantList = List.of(restaurant2, restaurant3);
+        List<Restaurant> restaurantList = List.of(restaurant1, restaurant2);
 
-        when(iRestaurantPersistencePort.getAllRestaurants()).thenReturn(restaurantList);
+        Pagination pagination = new Pagination(0, 10);
 
-        List<Restaurant> result = useCaseRestaurant.getAllRestaurants();
+        PageResult<Restaurant> pageResult = new PageResult<>(
+                restaurantList,
+                1, // totalPages
+                2  // totalElements
+        );
+
+        when(iRestaurantPersistencePort.getAllRestaurants(pagination))
+                .thenReturn(pageResult);
+
+        PageResult<Restaurant> result = useCaseRestaurant.getAllRestaurants(pagination);
+
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("R1", result.get(0).getNameRestaurant());
-        assertEquals("R2", result.get(1).getNameRestaurant());
+        assertEquals(2, result.getContent().size());
+        assertEquals("R1", result.getContent().get(0).getNameRestaurant());
+        assertEquals("R2", result.getContent().get(1).getNameRestaurant());
 
-        verify(iRestaurantPersistencePort, times(1)).getAllRestaurants();
+        verify(iRestaurantPersistencePort, times(1)).getAllRestaurants(pagination);
     }
 }

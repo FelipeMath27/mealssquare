@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -184,5 +185,32 @@ class DishServiceTest {
                 updatedDish.getIdDish().equals(dishUpadated.getIdDish()) &&
                 updatedDish.getStatusDish().equals(StatusDish.INA)
         ));
+    }
+
+    /** List dish with pagination and filter by category */
+    @Test
+    void test_get_dish_list_by_restaurant_and_category() {
+    Long idRestaurant = 1L;
+        int page = 0;
+        int size = 10;
+        Long idCategory = 1L;
+
+
+        Dish dishOne = new Dish(1L, "Pizza", category, "Delicious pizza", 12.99, restaurant, "http://example.com/pizza.jpg", StatusDish.ACT);
+        Dish dishTwo = new Dish(2L, "Burger", category, "Juicy burger", 8.99, restaurant, "http://example.com/burger.jpg", StatusDish.ACT);
+        Dish dishThree = new Dish(3L, "Pasta", category, "Creamy pasta", 10.99, restaurant, "http://example.com/pasta.jpg", StatusDish.ACT);
+
+        List<Dish> dishList = List.of(dishOne, dishTwo, dishThree);
+
+        when(iDishPersistencePort.findAllByRestaurantIdAndCategoryId(eq(idRestaurant), eq(idCategory), any()))
+                .thenReturn(dishList);
+
+        // Act
+        List<Dish> result = useCaseDish.getDishList(idRestaurant, page, size, idCategory);
+
+        // Assert
+        assertEquals(dishList, result);
+        verify(iDishPersistencePort, times(1))
+                .findAllByRestaurantIdAndCategoryId(eq(idRestaurant), eq(idCategory), any());
     }
 }

@@ -19,6 +19,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -61,5 +63,11 @@ public class DishHandler implements IDishHandler{
             throw new InfrastructureException(ConstantsErrorMessage.USER_NOT_FOUD, ex);
         }
         iDishServicePort.updateDishStatus(userOwner,iDishRequestMapper.toDishStatusUpdate(dishDTOStatusRequest));
+    }
+
+    @Override
+    public List<DishDTOResponse> getListDishes(Long idRestaurant, int page, int size, Long idCategory) {
+        List<Dish> dishList = iDishServicePort.getDishList(idRestaurant, page, size, idCategory);
+        return iDishResponseMapper.toDishDtoList(dishList);
     }
 }

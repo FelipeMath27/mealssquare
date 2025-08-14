@@ -5,10 +5,14 @@ import com.pragma.mealssquare.domain.model.Dish;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         uses = {ICategoryRequestMapper.class, RestaurantRequestMapper.class})
 public interface IDishResponseMapper {
     DishDTOResponse toResponse(Dish dish);
+
+    List<DishDTOResponse> toDishDtoList(List<Dish> dishList);
 }

@@ -76,6 +76,11 @@ public class ConstantsErrorMessage {
     /**Employee*/
     public static final String START_FLOW_TO_CREATE_EMPLOYEE = "Start flow to create an employee";
 
+    /**Pagination*/
+    public static final String INDEX_PAGE_INVALID = "Index page invalid, must be greater than or equal to 0";
+    public static final String SIZE_PAGE_INVALID = "Size page invalid, must be greater than 0";
+
+
     private ConstantsErrorMessage(){}
         // Private constructor to prevent instantiation
 }

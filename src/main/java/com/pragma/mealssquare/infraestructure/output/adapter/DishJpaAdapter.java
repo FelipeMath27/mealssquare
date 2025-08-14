@@ -11,8 +11,10 @@ import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -38,4 +40,9 @@ public class DishJpaAdapter implements IDishPersistencePort {
                     .orElseThrow(() -> new CustomException(ConstantsErrorMessage.DISH_NOT_FOUND))));
     }
 
+    @Override
+    public List<Dish> findAllByRestaurantIdAndCategoryId(Long idRestaurant, Long idCategory, Pageable pageable) {
+        return iDishEntityMapper.toDishList(
+                iDishRepository.findAllByRestaurantEntity_IdRestaurantAndCategoryEntity_IdCategory(idRestaurant, idCategory, pageable).getContent());
+    }
 }

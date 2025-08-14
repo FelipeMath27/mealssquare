@@ -1,6 +1,8 @@
 package com.pragma.mealssquare.domain.spi;
 
 import com.pragma.mealssquare.application.dto.UserDTOResponse;
+import com.pragma.mealssquare.domain.model.PageResult;
+import com.pragma.mealssquare.domain.model.Pagination;
 import com.pragma.mealssquare.domain.model.Restaurant;
 
 import java.util.List;
@@ -16,5 +18,6 @@ public interface IRestaurantPersistencePort {
     Optional<UserDTOResponse> findUserByEmail(String email);
     Optional<UserDTOResponse> findUserById(Long id);
 
-    List<Restaurant> getAllRestaurants();
+
+    PageResult<Restaurant> getAllRestaurants(Pagination pagination);
 }

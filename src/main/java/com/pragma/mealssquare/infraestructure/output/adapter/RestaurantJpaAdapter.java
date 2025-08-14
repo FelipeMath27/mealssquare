@@ -1,6 +1,8 @@
 package com.pragma.mealssquare.infraestructure.output.adapter;
 
 import com.pragma.mealssquare.application.dto.UserDTOResponse;
+import com.pragma.mealssquare.domain.model.PageResult;
+import com.pragma.mealssquare.domain.model.Pagination;
 import com.pragma.mealssquare.domain.model.Restaurant;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
@@ -17,6 +19,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -72,8 +78,20 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
     }
 
     @Override
-    public List<Restaurant> getAllRestaurants() {
-        List<RestaurantEntity> entitiesList = iRestaurantRepository.findAll();
-        return restaurantEntityMapper.toRestaurantList(entitiesList);
+    public PageResult<Restaurant> getAllRestaurants(Pagination pagination) {
+        Pageable pageable = PageRequest.of(
+                pagination.getPage(),
+                pagination.getSize(),
+                Sort.by("nameRestaurant").ascending()
+        );
+
+        Page<RestaurantEntity> page = iRestaurantRepository.findAllByOrderByNameAsc(pageable);
+        List<Restaurant> content = restaurantEntityMapper.toRestaurantList(page.getContent());
+
+        return new PageResult<>(
+                content,
+                page.getTotalPages(),
+                page.getTotalElements()
+        );
     }
 }

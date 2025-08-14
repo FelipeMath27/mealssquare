@@ -5,6 +5,8 @@ import com.pragma.mealssquare.application.dto.DishDTOResponse;
 import com.pragma.mealssquare.application.dto.DishDTOStatusRequest;
 import com.pragma.mealssquare.application.dto.DishUpdateDTORequest;
 
+import java.util.List;
+
 public interface IDishHandler {
     void saveDish (DishDTORequest dishDTORequest);
 
@@ -13,4 +15,6 @@ public interface IDishHandler {
     DishDTOResponse getDishDTO(Long idDish);
 
     void updateStatusDish(DishDTOStatusRequest dishDTOStatusRequest, String email);
+
+    List<DishDTOResponse> getListDishes(Long idRestaurant, int page, int size, Long idCategory);
 }

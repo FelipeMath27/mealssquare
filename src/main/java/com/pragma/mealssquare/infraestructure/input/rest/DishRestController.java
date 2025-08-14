@@ -1,10 +1,12 @@
 package com.pragma.mealssquare.infraestructure.input.rest;
 
 import com.pragma.mealssquare.application.dto.DishDTORequest;
+import com.pragma.mealssquare.application.dto.DishDTOResponse;
 import com.pragma.mealssquare.application.dto.DishDTOStatusRequest;
 import com.pragma.mealssquare.application.dto.DishUpdateDTORequest;
 import com.pragma.mealssquare.application.handler.IDishHandler;
 
+import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.infraestructure.security.IJwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -39,6 +43,16 @@ public class DishRestController {
     public ResponseEntity<Void> updateStatusDish(@RequestBody DishDTOStatusRequest dishDTOStatusRequest, Authentication authentication){
         iDishHandler.updateStatusDish(dishDTOStatusRequest,authentication.getName());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/list-dishes")
+    public ResponseEntity<?> listDishes(@RequestParam Long idRestaurant,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(required = false) Long idCategory) {
+        log.info("{}", ConstantsErrorMessage.LISTENER_OK_CONTROLLER);
+        List<DishDTOResponse> dishDTOResponseList = iDishHandler.getListDishes(idRestaurant, page, size, idCategory);
+        return ResponseEntity.ok(dishDTOResponseList);
     }
 }
 

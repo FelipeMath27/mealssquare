@@ -2,6 +2,9 @@ package com.pragma.mealssquare.domain.usecase;
 
 
 import com.pragma.mealssquare.domain.api.IRestaurantServicePort;
+import com.pragma.mealssquare.domain.exception.DomainException;
+import com.pragma.mealssquare.domain.model.PageResult;
+import com.pragma.mealssquare.domain.model.Pagination;
 import com.pragma.mealssquare.domain.model.Restaurant;
 import com.pragma.mealssquare.domain.model.User;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
@@ -9,7 +12,6 @@ import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 
 
 import com.pragma.mealssquare.domain.validator.ValidatorClasses;
-import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -38,15 +40,15 @@ public class UseCaseRestaurant implements IRestaurantServicePort {
     private void processValidateSaveRestaurant(Restaurant restaurant){
         log.info(ConstantsErrorMessage.START_PROCESS_TO_VALIDATE_CONDITION);
         restaurant.setNameRestaurant(ValidatorClasses.validateRestaurantName(restaurant.getNameRestaurant())
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.INVALID_RESTAURANT_NAME_FORMAT)));
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.INVALID_RESTAURANT_NAME_FORMAT)));
         restaurant.setNit(ValidatorClasses.validateNitNumber(restaurant.getNit())
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.INVALID_FORMAT_NIT)));
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.INVALID_FORMAT_NIT)));
         restaurant.setPhoneNumberRestaurant(ValidatorClasses.validatePhoneNumber(restaurant.getPhoneNumberRestaurant())
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.INVALID_FORMAT_PHONE)));
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.INVALID_FORMAT_PHONE)));
         restaurant.setAddressRestaurant(ValidatorClasses.sanitize(restaurant.getAddressRestaurant())
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL)));
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.CANT_BE_NULL)));
         restaurant.setUrlLogo(ValidatorClasses.sanitize(restaurant.getUrlLogo())
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL)));
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.CANT_BE_NULL)));
         iRestaurantPersistencePort.save(restaurant);
         log.info(ConstantsErrorMessage.END_SUCCESSFUL_FLOW);
     }
@@ -54,9 +56,9 @@ public class UseCaseRestaurant implements IRestaurantServicePort {
     @Override
     public Restaurant getRestaurantByNit(String nitRestaurant) {
         String nitSatinized = ValidatorClasses.sanitize(nitRestaurant)
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.CANT_BE_NULL));
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.CANT_BE_NULL));
         return iRestaurantPersistencePort.findRestaurantByNit(nitSatinized)
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.RESTAURANT_NOT_FOUND));
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.RESTAURANT_NOT_FOUND));
     }
 
     @Override
@@ -65,8 +67,7 @@ public class UseCaseRestaurant implements IRestaurantServicePort {
     }
 
     @Override
-    public List<Restaurant> getAllRestaurants() {
-        log.info(ConstantsErrorMessage.START_CONSULT_LIST_RESTAURANT);
-        return iRestaurantPersistencePort.getAllRestaurants();
+    public PageResult<Restaurant> getAllRestaurants(Pagination pagination) {
+        return iRestaurantPersistencePort.getAllRestaurants(pagination);
     }
 }

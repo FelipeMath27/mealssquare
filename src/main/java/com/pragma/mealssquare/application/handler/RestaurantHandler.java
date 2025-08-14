@@ -1,11 +1,14 @@
 package com.pragma.mealssquare.application.handler;
 
+import com.pragma.mealssquare.application.dto.PageDTOResponse;
 import com.pragma.mealssquare.application.dto.RestaurantDTORequest;
 import com.pragma.mealssquare.application.dto.RestaurantDTOResponse;
 import com.pragma.mealssquare.application.mapper.IUserResponseMapper;
 import com.pragma.mealssquare.application.mapper.RestaurantRequestMapper;
 import com.pragma.mealssquare.application.mapper.RestaurantResponseMapper;
 import com.pragma.mealssquare.domain.api.IRestaurantServicePort;
+import com.pragma.mealssquare.domain.model.PageResult;
+import com.pragma.mealssquare.domain.model.Pagination;
 import com.pragma.mealssquare.domain.model.Restaurant;
 
 import com.pragma.mealssquare.domain.model.User;
@@ -16,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -30,6 +31,7 @@ public class RestaurantHandler implements IRestaurantHandler{
     private final IUserFeignHandler iUserFeignHandler;
     private final IUserResponseMapper iUserResponseMapper;
     private final RestaurantResponseMapper restaurantResponseMapper;
+    private final PageDTOResponse PageDTOResponse;
 
 
     @Override
@@ -46,8 +48,14 @@ public class RestaurantHandler implements IRestaurantHandler{
     }
 
     @Override
-    public List<RestaurantDTOResponse> getListRestaurantDtoResponses() {
-        List<Restaurant> restaurantList = iRestaurantServicePort.getAllRestaurants();
-        return restaurantResponseMapper.toRestaurantDtoList(restaurantList);
+    public PageDTOResponse<RestaurantDTOResponse> getAllRestaurants(int page, int size) {
+        Pagination pagination = new Pagination(page, size);
+        PageResult<Restaurant> restaurantPageResult = iRestaurantServicePort.getAllRestaurants(pagination);
+        return new PageDTOResponse<>(
+                restaurantResponseMapper.toRestaurantDtoList(restaurantPageResult.getContent()),
+                page,
+                size,
+                restaurantPageResult.getTotalPages(),
+                restaurantPageResult.getTotalElements());
     }
 }

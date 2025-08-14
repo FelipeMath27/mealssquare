@@ -10,6 +10,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
@@ -22,6 +24,8 @@ public interface IDishEntityMapper {
     @Mapping(source = "categoryEntity", target = "category")
     @Mapping(source = "restaurantEntity", target = "restaurant")
     Dish toDish(DishEntity dishEntity);
+
+    List<Dish> toDishList(List<DishEntity> dishEntities);
 
     default Category mapCategoryEntityToCategory(CategoryEntity categoryEntity){
         if (categoryEntity == null){

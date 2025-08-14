@@ -1,5 +1,6 @@
 package com.pragma.mealssquare.infraestructure.input.rest;
 
+import com.pragma.mealssquare.application.dto.PageDTOResponse;
 import com.pragma.mealssquare.application.dto.RestaurantDTORequest;
 import com.pragma.mealssquare.application.dto.RestaurantDTOResponse;
 import com.pragma.mealssquare.application.handler.IRestaurantHandler;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -29,9 +29,9 @@ public class RestaurantRestController {
     }
 
     @GetMapping("/list-restaurants")
-    public ResponseEntity<List<RestaurantDTOResponse>> listRestaurantsDTORequest(){
+    public ResponseEntity<PageDTOResponse<RestaurantDTOResponse>> listRestaurantsDTORequest(@RequestParam int page,
+                                                                                            @RequestParam int size) {
         log.info(ConstantsErrorMessage.LISTENER_OK_CONTROLLER);
-        List<RestaurantDTOResponse> restaurantDTOResponseList = iRestaurantHandler.getListRestaurantDtoResponses();
-        return ResponseEntity.ok(restaurantDTOResponseList);
+        return ResponseEntity.ok(iRestaurantHandler.getAllRestaurants(page,size));
     }
 }
