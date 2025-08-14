@@ -31,8 +31,6 @@ public class RestaurantHandler implements IRestaurantHandler{
     private final IUserFeignHandler iUserFeignHandler;
     private final IUserResponseMapper iUserResponseMapper;
     private final RestaurantResponseMapper restaurantResponseMapper;
-    private final PageDTOResponse PageDTOResponse;
-
 
     @Override
     public void saveListRestaurant(RestaurantDTORequest restaurantDTORequest) {

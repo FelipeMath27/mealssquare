@@ -5,7 +5,6 @@ import com.pragma.mealssquare.domain.model.PageResult;
 import com.pragma.mealssquare.domain.model.Pagination;
 import com.pragma.mealssquare.domain.model.Restaurant;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface IRestaurantPersistencePort {

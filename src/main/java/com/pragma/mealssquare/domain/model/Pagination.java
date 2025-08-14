@@ -5,7 +5,6 @@
 
     @Getter
     @Setter
-
     public class Pagination {
         private final int page;
         private final int size;

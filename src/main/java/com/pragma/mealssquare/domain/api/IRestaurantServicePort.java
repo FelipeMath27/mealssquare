@@ -5,7 +5,6 @@ import com.pragma.mealssquare.domain.model.Pagination;
 import com.pragma.mealssquare.domain.model.Restaurant;
 import com.pragma.mealssquare.domain.model.User;
 
-import java.util.List;
 
 public interface IRestaurantServicePort {
     void saveRestaurants (Restaurant restaurant, User user);

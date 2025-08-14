@@ -1,11 +1,9 @@
 package com.pragma.mealssquare.domain.validator;
 
+import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.TypeRolEnum;
 import com.pragma.mealssquare.domain.model.User;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
-import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
@@ -53,22 +51,22 @@ public class ValidatorClasses {
     public static void validateAdminCreator(User user) {
         Optional.ofNullable(user)
                 .filter(u -> u.getRol() != null && TypeRolEnum.ADMIN.name().equals(u.getRol().getNameRol()))
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.PERMISSION_DENIED));
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.PERMISSION_DENIED));
     }
 
     public static void validateOwner(User user) {
-        if (user.getRol() == null || !TypeRolEnum.OWNER.name().equals(user.getRol().getNameRol())) throw new CustomException(ConstantsErrorMessage.IS_NOT_OWNER_ROLE);
+        if (user.getRol() == null || !TypeRolEnum.OWNER.name().equals(user.getRol().getNameRol())) throw new DomainException(ConstantsErrorMessage.IS_NOT_OWNER_ROLE);
     }
 
     public static double validatePriceDish(double price){
         return Optional.of(price)
                 .filter(pr -> pr > ConstantsErrorMessage.MIN_PRICE_DISH)
-                .orElseThrow(() -> new CustomException(ConstantsErrorMessage.PRICE_MUST_BE_GREATER_THAN));
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.PRICE_MUST_BE_GREATER_THAN));
     }
 
     public static void validateNotNullId(Long id, String errorMessage) {
         Optional.ofNullable(id)
-                .orElseThrow(() -> new CustomException(errorMessage));
+                .orElseThrow(() -> new DomainException(errorMessage));
     }
 
 }

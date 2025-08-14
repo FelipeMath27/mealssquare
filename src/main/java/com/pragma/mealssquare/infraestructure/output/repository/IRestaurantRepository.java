@@ -15,5 +15,5 @@ public interface IRestaurantRepository extends JpaRepository<RestaurantEntity, L
 
     Optional<RestaurantEntity> findById(Long idRestaurant);
 
-    Page<RestaurantEntity> findAllByOrderByNameAsc(Pageable pageable);
+    Page<RestaurantEntity> findAllByOrderByNameRestaurantAsc(Pageable pageable);
 }

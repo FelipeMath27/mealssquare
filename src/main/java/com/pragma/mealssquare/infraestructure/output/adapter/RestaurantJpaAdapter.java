@@ -85,7 +85,7 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
                 Sort.by("nameRestaurant").ascending()
         );
 
-        Page<RestaurantEntity> page = iRestaurantRepository.findAllByOrderByNameAsc(pageable);
+        Page<RestaurantEntity> page = iRestaurantRepository.findAllByOrderByNameRestaurantAsc(pageable);
         List<Restaurant> content = restaurantEntityMapper.toRestaurantList(page.getContent());
 
         return new PageResult<>(

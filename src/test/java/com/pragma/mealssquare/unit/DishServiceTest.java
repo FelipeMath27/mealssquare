@@ -3,6 +3,7 @@ package com.pragma.mealssquare.unit;
 import com.pragma.mealssquare.application.dto.UserDTOResponse;
 import com.pragma.mealssquare.application.handler.IUserFeignHandler;
 import com.pragma.mealssquare.application.mapper.IUserResponseMapper;
+import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.*;
 import com.pragma.mealssquare.domain.spi.ICategoryPersistencePort;
 import com.pragma.mealssquare.domain.spi.IDishPersistencePort;
@@ -10,7 +11,6 @@ import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.usecase.UseCaseDish;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.domain.validator.ValidatorService;
-import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -53,7 +53,7 @@ class DishServiceTest {
     private User user;
     private Category category;
     private Restaurant restaurant;
-    private CustomException customException;
+    private DomainException domainException;
 
     @BeforeEach
     void setUp(){
@@ -86,24 +86,24 @@ class DishServiceTest {
     @Test
     void test_create_dish_with_wrong_price(){
         newDish.setPriceDish(-1.0);
-        customException = assertThrows(CustomException.class,() -> useCaseDish.saveDish(newDish));
-        assertEquals(ConstantsErrorMessage.PRICE_MUST_BE_GREATER_THAN, customException.getMessage());
+        domainException = assertThrows(DomainException.class,() -> useCaseDish.saveDish(newDish));
+        assertEquals(ConstantsErrorMessage.PRICE_MUST_BE_GREATER_THAN, domainException.getMessage());
         verify(iDishPersistencePort,never()).save(any(Dish.class));
     }
 
     @Test
     void test_create_dish_without_name(){
         newDish.setNameDish(null);
-        customException = assertThrows(CustomException.class,() -> useCaseDish.saveDish(newDish));
-        assertEquals(ConstantsErrorMessage.DISH_NAME_CANT_BE_NULL, customException.getMessage());
+        domainException = assertThrows(DomainException.class,() -> useCaseDish.saveDish(newDish));
+        assertEquals(ConstantsErrorMessage.DISH_NAME_CANT_BE_NULL, domainException.getMessage());
         verify(iDishPersistencePort,never()).save(any(Dish.class));
     }
 
     @Test
     void test_create_dish_without_description(){
         newDish.setDishDescription(null);
-        customException = assertThrows(CustomException.class,() -> useCaseDish.saveDish(newDish));
-        assertEquals(ConstantsErrorMessage.DISH_DESCRIPTION_CANT_BE_NULL,customException.getMessage());
+        domainException = assertThrows(DomainException.class,() -> useCaseDish.saveDish(newDish));
+        assertEquals(ConstantsErrorMessage.DISH_DESCRIPTION_CANT_BE_NULL, domainException.getMessage());
         verify(iDishPersistencePort,never()).save(any(Dish.class));
     }
 
@@ -153,16 +153,16 @@ class DishServiceTest {
     @Test
     void test_not_found_dish_to_update(){
         when(iDishPersistencePort.findById(newDish.getIdDish())).thenReturn(Optional.empty());
-        customException = assertThrows(CustomException.class, ()-> useCaseDish.updateDish(user,newDish));
-        assertEquals(ConstantsErrorMessage.DISH_NOT_FOUND,customException.getMessage());
+        domainException = assertThrows(DomainException.class, ()-> useCaseDish.updateDish(user,newDish));
+        assertEquals(ConstantsErrorMessage.DISH_NOT_FOUND, domainException.getMessage());
         verify(iDishPersistencePort,never()).save(any(Dish.class));
     }
 
     @Test
     void test_update_dish_non_owner_restaurant_dish(){
         newDish.getRestaurant().setIdOwner(10L);
-        customException = assertThrows(CustomException.class, () -> useCaseDish.updateDish(user,newDish));
-        assertEquals(ConstantsErrorMessage.INCORRECT_OWNER_TO_UPDATE,customException.getMessage());
+        domainException = assertThrows(DomainException.class, () -> useCaseDish.updateDish(user,newDish));
+        assertEquals(ConstantsErrorMessage.INCORRECT_OWNER_TO_UPDATE, domainException.getMessage());
         verify(iDishPersistencePort,never()).save(any(Dish.class));
     }
 
@@ -205,10 +205,8 @@ class DishServiceTest {
         when(iDishPersistencePort.findAllByRestaurantIdAndCategoryId(eq(idRestaurant), eq(idCategory), any()))
                 .thenReturn(dishList);
 
-        // Act
         List<Dish> result = useCaseDish.getDishList(idRestaurant, page, size, idCategory);
 
-        // Assert
         assertEquals(dishList, result);
         verify(iDishPersistencePort, times(1))
                 .findAllByRestaurantIdAndCategoryId(eq(idRestaurant), eq(idCategory), any());

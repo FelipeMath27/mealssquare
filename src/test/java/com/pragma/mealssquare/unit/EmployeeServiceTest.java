@@ -2,6 +2,7 @@ package com.pragma.mealssquare.unit;
 
 import com.pragma.mealssquare.application.handler.IUserFeignHandler;
 import com.pragma.mealssquare.application.mapper.IUserResponseMapper;
+import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.*;
 import com.pragma.mealssquare.domain.spi.IEmployeePersistencePort;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
@@ -48,7 +49,7 @@ public class EmployeeServiceTest {
     private User userEmployee, userOwner;
     private Rol rol, rolOwner;
     private Restaurant restaurant, restaurant1;
-    private CustomException customException;
+    private DomainException domainException;
 
     @BeforeEach
     void setUp(){
@@ -76,10 +77,10 @@ public class EmployeeServiceTest {
     @Test
     void test_create_employee_with_null_restaurant() {
         restaurant1.setIdRestaurant(2L);
-         customException = assertThrows(CustomException.class, () -> {
+         domainException = assertThrows(DomainException.class, () -> {
             useCaseEmployee.saveEmployee(employee, userEmployee, userOwner);
         });
-        assertEquals(ConstantsErrorMessage.RESTAURANT_NOT_FOUND, customException.getMessage());
+        assertEquals(ConstantsErrorMessage.RESTAURANT_NOT_FOUND, domainException.getMessage());
     }
 
 }

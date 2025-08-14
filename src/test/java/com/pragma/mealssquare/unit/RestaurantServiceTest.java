@@ -3,12 +3,12 @@ package com.pragma.mealssquare.unit;
 import com.pragma.mealssquare.application.dto.UserDTOResponse;
 import com.pragma.mealssquare.application.handler.IUserFeignHandler;
 import com.pragma.mealssquare.application.mapper.IUserResponseMapper;
+import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.*;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.usecase.UseCaseRestaurant;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.domain.validator.ValidatorService;
-import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.*;
     private Restaurant restaurant;
     private Rol adminRole,ownerRole;
 
-    private CustomException customException;
+    private DomainException domainException;
 
     @BeforeEach
     void setUp() {
@@ -78,32 +78,32 @@ import static org.mockito.Mockito.*;
     void test_createRestaurant_with_non_user_owner(){
     restaurant.setIdOwner(adminRole.getIdRol());
     when(iUserFeignHandler.getUserById(creatorUser.getIdUser())).thenReturn(new UserDTOResponse());
-    customException = assertThrows(CustomException.class,() -> useCaseRestaurant.saveRestaurants(restaurant,creatorUser));
-    assertEquals(ConstantsErrorMessage.IS_NOT_OWNER_ROLE,customException.getMessage());
+        domainException = assertThrows(DomainException.class,() -> useCaseRestaurant.saveRestaurants(restaurant,creatorUser));
+    assertEquals(ConstantsErrorMessage.IS_NOT_OWNER_ROLE,domainException.getMessage());
     verify(iRestaurantPersistencePort,never()).save(any(Restaurant.class));
     }
 
     @Test
     void test_createRestaurant_with_invalid_Name_Restaurant(){
         restaurant.setNameRestaurant("123456");
-        customException = assertThrows(CustomException.class, () -> useCaseRestaurant.saveRestaurants(restaurant,ownerUser));
-        assertEquals(ConstantsErrorMessage.INVALID_RESTAURANT_NAME_FORMAT,customException.getMessage());
+        domainException = assertThrows(DomainException.class, () -> useCaseRestaurant.saveRestaurants(restaurant,ownerUser));
+        assertEquals(ConstantsErrorMessage.INVALID_RESTAURANT_NAME_FORMAT,domainException.getMessage());
         verify(iRestaurantPersistencePort,never()).save(any(Restaurant.class));
     }
 
     @Test
         void test_createRestaurant_with_invalid_number_Restaurant(){
         restaurant.setPhoneNumberRestaurant("+071234561212");
-        customException = assertThrows(CustomException.class, () -> useCaseRestaurant.saveRestaurants(restaurant,ownerUser));
-        assertEquals(ConstantsErrorMessage.INVALID_FORMAT_PHONE, customException.getMessage());
+        domainException = assertThrows(DomainException.class, () -> useCaseRestaurant.saveRestaurants(restaurant,ownerUser));
+        assertEquals(ConstantsErrorMessage.INVALID_FORMAT_PHONE, domainException.getMessage());
         verify(iRestaurantPersistencePort,never()).save(any(Restaurant.class));
     }
 
     @Test
     void test_createRestaurant_with_invalid_nit(){
         restaurant.setNit("ABVCSACAC1");
-        customException = assertThrows(CustomException.class, () -> useCaseRestaurant.saveRestaurants(restaurant,ownerUser));
-        assertEquals(ConstantsErrorMessage.INVALID_FORMAT_NIT, customException.getMessage());
+        domainException = assertThrows(DomainException.class, () -> useCaseRestaurant.saveRestaurants(restaurant,ownerUser));
+        assertEquals(ConstantsErrorMessage.INVALID_FORMAT_NIT, domainException.getMessage());
         verify(iRestaurantPersistencePort,never()).save(any(Restaurant.class));
     }
 
