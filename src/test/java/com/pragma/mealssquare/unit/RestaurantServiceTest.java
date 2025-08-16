@@ -5,6 +5,8 @@ import com.pragma.mealssquare.application.handler.IUserFeignHandler;
 import com.pragma.mealssquare.application.mapper.IUserResponseMapper;
 import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.*;
+import com.pragma.mealssquare.domain.pagination.PageResult;
+import com.pragma.mealssquare.domain.pagination.Pagination;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.usecase.UseCaseRestaurant;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
@@ -16,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -120,8 +121,8 @@ import static org.mockito.Mockito.*;
 
         PageResult<Restaurant> pageResult = new PageResult<>(
                 restaurantList,
-                1, // totalPages
-                2  // totalElements
+                1,
+                2
         );
 
         when(iRestaurantPersistencePort.getAllRestaurants(pagination))
@@ -130,9 +131,9 @@ import static org.mockito.Mockito.*;
         PageResult<Restaurant> result = useCaseRestaurant.getAllRestaurants(pagination);
 
         assertNotNull(result);
-        assertEquals(2, result.getContent().size());
-        assertEquals("R1", result.getContent().get(0).getNameRestaurant());
-        assertEquals("R2", result.getContent().get(1).getNameRestaurant());
+        assertEquals(2, result.content().size());
+        assertEquals("R1", result.content().get(0).getNameRestaurant());
+        assertEquals("R2", result.content().get(1).getNameRestaurant());
 
         verify(iRestaurantPersistencePort, times(1)).getAllRestaurants(pagination);
     }

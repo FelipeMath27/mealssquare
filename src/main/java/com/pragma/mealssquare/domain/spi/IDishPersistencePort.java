@@ -1,8 +1,8 @@
 package com.pragma.mealssquare.domain.spi;
 
 import com.pragma.mealssquare.domain.model.Dish;
-import com.pragma.mealssquare.domain.model.PageResult;
-import com.pragma.mealssquare.domain.model.Pagination;
+import com.pragma.mealssquare.domain.pagination.PageResult;
+import com.pragma.mealssquare.domain.pagination.Pagination;
 
 import java.util.Optional;
 

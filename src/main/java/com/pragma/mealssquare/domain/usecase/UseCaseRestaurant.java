@@ -3,8 +3,8 @@ package com.pragma.mealssquare.domain.usecase;
 
 import com.pragma.mealssquare.domain.api.IRestaurantServicePort;
 import com.pragma.mealssquare.domain.exception.DomainException;
-import com.pragma.mealssquare.domain.model.PageResult;
-import com.pragma.mealssquare.domain.model.Pagination;
+import com.pragma.mealssquare.domain.pagination.PageResult;
+import com.pragma.mealssquare.domain.pagination.Pagination;
 import com.pragma.mealssquare.domain.model.Restaurant;
 import com.pragma.mealssquare.domain.model.User;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;

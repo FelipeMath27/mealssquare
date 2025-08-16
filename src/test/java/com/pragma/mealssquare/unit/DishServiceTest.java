@@ -5,6 +5,8 @@ import com.pragma.mealssquare.application.handler.IUserFeignHandler;
 import com.pragma.mealssquare.application.mapper.IUserResponseMapper;
 import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.*;
+import com.pragma.mealssquare.domain.pagination.PageResult;
+import com.pragma.mealssquare.domain.pagination.Pagination;
 import com.pragma.mealssquare.domain.spi.ICategoryPersistencePort;
 import com.pragma.mealssquare.domain.spi.IDishPersistencePort;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
@@ -22,8 +24,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class DishServiceTest {
@@ -187,28 +188,47 @@ class DishServiceTest {
         ));
     }
 
-    /** List dish with pagination and filter by category */
+
     @Test
-    void test_get_dish_list_by_restaurant_and_category() {
-    Long idRestaurant = 1L;
-        int page = 0;
-        int size = 10;
-        Long idCategory = 1L;
+    void test_get_dish_list_by_restaurant_without_category() {
+        // Arrange
+        Dish dishOne = new Dish(1L, "Pizza", category, "Delicious pizza", 12.99,
+                restaurant, "http://example.com/pizza.jpg", StatusDish.ACT);
+        Dish dishTwo = new Dish(2L, "Burger", category, "Juicy burger", 8.99,
+                restaurant, "http://example.com/burger.jpg", StatusDish.ACT);
 
+        List<Dish> dishList = List.of(dishOne, dishTwo);
+        Pagination pagination = new Pagination(0, 5);
 
-        Dish dishOne = new Dish(1L, "Pizza", category, "Delicious pizza", 12.99, restaurant, "http://example.com/pizza.jpg", StatusDish.ACT);
-        Dish dishTwo = new Dish(2L, "Burger", category, "Juicy burger", 8.99, restaurant, "http://example.com/burger.jpg", StatusDish.ACT);
-        Dish dishThree = new Dish(3L, "Pasta", category, "Creamy pasta", 10.99, restaurant, "http://example.com/pasta.jpg", StatusDish.ACT);
+        PageResult<Dish> pageResult = new PageResult<>(
+                dishList,
+                1,
+                2
+        );
 
-        List<Dish> dishList = List.of(dishOne, dishTwo, dishThree);
+        when(iDishPersistencePort.findDishesByIdRestaurant(
+                restaurant.getIdRestaurant(),
+                null,
+                pagination
+        )).thenReturn(pageResult);
 
-        when(iDishPersistencePort.findAllByRestaurantIdAndCategoryId(eq(idRestaurant), eq(idCategory), any()))
-                .thenReturn(dishList);
+        PageResult<Dish> result = useCaseDish.getDishList(
+                restaurant.getIdRestaurant(),
+                null,
+                pagination
+        );
 
-        List<Dish> result = useCaseDish.getDishList(idRestaurant, page, size, idCategory);
-
-        assertEquals(dishList, result);
-        verify(iDishPersistencePort, times(1))
-                .findAllByRestaurantIdAndCategoryId(eq(idRestaurant), eq(idCategory), any());
+        assertNotNull(result);
+        assertEquals(1, result.totalPages());
+        assertEquals(2, result.totalElements());
+        assertEquals(2, result.content().size());
+        assertEquals("Pizza", result.content().get(0).getNameDish());
+        assertEquals("Burger", result.content().get(1).getNameDish());
+        verify(iDishPersistencePort, times(1)).findDishesByIdRestaurant(
+                restaurant.getIdRestaurant(),
+                null,
+                pagination
+        );
     }
+
 }

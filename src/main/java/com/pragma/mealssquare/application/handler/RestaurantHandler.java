@@ -7,8 +7,8 @@ import com.pragma.mealssquare.application.mapper.IUserResponseMapper;
 import com.pragma.mealssquare.application.mapper.RestaurantRequestMapper;
 import com.pragma.mealssquare.application.mapper.RestaurantResponseMapper;
 import com.pragma.mealssquare.domain.api.IRestaurantServicePort;
-import com.pragma.mealssquare.domain.model.PageResult;
-import com.pragma.mealssquare.domain.model.Pagination;
+import com.pragma.mealssquare.domain.pagination.PageResult;
+import com.pragma.mealssquare.domain.pagination.Pagination;
 import com.pragma.mealssquare.domain.model.Restaurant;
 
 import com.pragma.mealssquare.domain.model.User;
@@ -50,10 +50,10 @@ public class RestaurantHandler implements IRestaurantHandler{
         Pagination pagination = new Pagination(page, size);
         PageResult<Restaurant> restaurantPageResult = iRestaurantServicePort.getAllRestaurants(pagination);
         return new PageDTOResponse<>(
-                restaurantResponseMapper.toRestaurantDtoList(restaurantPageResult.getContent()),
+                restaurantResponseMapper.toRestaurantDtoList(restaurantPageResult.content()),
                 page,
                 size,
-                restaurantPageResult.getTotalPages(),
-                restaurantPageResult.getTotalElements());
+                restaurantPageResult.totalPages(),
+                restaurantPageResult.totalElements());
     }
 }

@@ -1,8 +1,8 @@
 package com.pragma.mealssquare.infraestructure.output.adapter;
 
 import com.pragma.mealssquare.application.dto.UserDTOResponse;
-import com.pragma.mealssquare.domain.model.PageResult;
-import com.pragma.mealssquare.domain.model.Pagination;
+import com.pragma.mealssquare.domain.pagination.PageResult;
+import com.pragma.mealssquare.domain.pagination.Pagination;
 import com.pragma.mealssquare.domain.model.Restaurant;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
@@ -80,8 +80,8 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
     @Override
     public PageResult<Restaurant> getAllRestaurants(Pagination pagination) {
         Pageable pageable = PageRequest.of(
-                pagination.getPage(),
-                pagination.getSize(),
+                pagination.page(),
+                pagination.size(),
                 Sort.by("nameRestaurant").ascending()
         );
 

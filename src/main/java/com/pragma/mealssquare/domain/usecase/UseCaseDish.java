@@ -3,6 +3,8 @@ package com.pragma.mealssquare.domain.usecase;
 import com.pragma.mealssquare.domain.api.IDishServicePort;
 import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.*;
+import com.pragma.mealssquare.domain.pagination.PageResult;
+import com.pragma.mealssquare.domain.pagination.Pagination;
 import com.pragma.mealssquare.domain.spi.ICategoryPersistencePort;
 import com.pragma.mealssquare.domain.spi.IDishPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
@@ -11,10 +13,7 @@ import com.pragma.mealssquare.domain.validator.ValidatorClasses;
 import com.pragma.mealssquare.domain.validator.ValidatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -106,6 +105,6 @@ public class UseCaseDish implements IDishServicePort {
 
     @Override
     public PageResult<Dish> getDishList(Long idRestaurant, Long idCategory, Pagination pagination) {
-        return null;
+        return iDishPersistencePort.findDishesByIdRestaurant(idRestaurant,idCategory,pagination);
     }
 }

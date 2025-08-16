@@ -1,8 +1,8 @@
 package com.pragma.mealssquare.infraestructure.output.adapter;
 
 import com.pragma.mealssquare.domain.model.Dish;
-import com.pragma.mealssquare.domain.model.PageResult;
-import com.pragma.mealssquare.domain.model.Pagination;
+import com.pragma.mealssquare.domain.pagination.PageResult;
+import com.pragma.mealssquare.domain.pagination.Pagination;
 import com.pragma.mealssquare.domain.spi.IDishPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -48,8 +47,8 @@ public class DishJpaAdapter implements IDishPersistencePort {
     @Override
     public PageResult<Dish> findDishesByIdRestaurant(Long idRestaurant, Long idCategory, Pagination pagination) {
         Pageable pageable = PageRequest.of(
-                pagination.getPage(),
-                pagination.getSize()
+                pagination.page(),
+                pagination.size()
         );
 
         Page<DishEntity> dishEntityPage;

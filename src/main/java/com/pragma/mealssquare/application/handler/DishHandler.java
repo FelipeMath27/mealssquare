@@ -6,19 +6,16 @@ import com.pragma.mealssquare.application.mapper.IDishResponseMapper;
 import com.pragma.mealssquare.application.mapper.IUserResponseMapper;
 import com.pragma.mealssquare.domain.api.IDishServicePort;
 import com.pragma.mealssquare.domain.model.Dish;
-import com.pragma.mealssquare.domain.model.PageResult;
-import com.pragma.mealssquare.domain.model.Pagination;
+import com.pragma.mealssquare.domain.pagination.PageResult;
+import com.pragma.mealssquare.domain.pagination.Pagination;
 import com.pragma.mealssquare.domain.model.User;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.infraestructure.exceptions.InfrastructureException;
-import com.pragma.mealssquare.infraestructure.feign.IUsersMealsSquare;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -69,11 +66,11 @@ public class DishHandler implements IDishHandler{
         Pagination pagination = new Pagination(page, size);
         PageResult<Dish> pageResult = iDishServicePort.getDishList(idRestaurant,idCategory,pagination);
         return new PageDTOResponse<>(
-                iDishResponseMapper.toDishDtoList(pageResult.getContent()),
+                iDishResponseMapper.toDishDtoList(pageResult.content()),
                 page,
                 size,
-                pageResult.getTotalPages(),
-                pageResult.getTotalElements()
+                pageResult.totalPages(),
+                pageResult.totalElements()
         );
     }
 }
