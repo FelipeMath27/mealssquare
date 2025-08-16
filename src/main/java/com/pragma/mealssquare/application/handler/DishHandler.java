@@ -1,14 +1,13 @@
 package com.pragma.mealssquare.application.handler;
 
-import com.pragma.mealssquare.application.dto.DishDTORequest;
-import com.pragma.mealssquare.application.dto.DishDTOResponse;
-import com.pragma.mealssquare.application.dto.DishDTOStatusRequest;
-import com.pragma.mealssquare.application.dto.DishUpdateDTORequest;
+import com.pragma.mealssquare.application.dto.*;
 import com.pragma.mealssquare.application.mapper.IDishRequestMapper;
 import com.pragma.mealssquare.application.mapper.IDishResponseMapper;
 import com.pragma.mealssquare.application.mapper.IUserResponseMapper;
 import com.pragma.mealssquare.domain.api.IDishServicePort;
 import com.pragma.mealssquare.domain.model.Dish;
+import com.pragma.mealssquare.domain.model.PageResult;
+import com.pragma.mealssquare.domain.model.Pagination;
 import com.pragma.mealssquare.domain.model.User;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.infraestructure.exceptions.InfrastructureException;
@@ -66,8 +65,15 @@ public class DishHandler implements IDishHandler{
     }
 
     @Override
-    public List<DishDTOResponse> getListDishes(Long idRestaurant, int page, int size, Long idCategory) {
-        List<Dish> dishList = iDishServicePort.getDishList(idRestaurant, page, size, idCategory);
-        return iDishResponseMapper.toDishDtoList(dishList);
+    public PageDTOResponse<DishDTOResponse> getDishesByIdRestaurant(Long idRestaurant, int page, int size, Long idCategory) {
+        Pagination pagination = new Pagination(page, size);
+        PageResult<Dish> pageResult = iDishServicePort.getDishList(idRestaurant,idCategory,pagination);
+        return new PageDTOResponse<>(
+                iDishResponseMapper.toDishDtoList(pageResult.getContent()),
+                page,
+                size,
+                pageResult.getTotalPages(),
+                pageResult.getTotalElements()
+        );
     }
 }

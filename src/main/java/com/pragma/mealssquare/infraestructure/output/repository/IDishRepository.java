@@ -16,4 +16,6 @@ public interface IDishRepository extends JpaRepository<DishEntity, Long> {
             Long idCategory,
             Pageable pageable
     );
+
+    Page<DishEntity> findAllByRestaurantEntity_IdRestaurant(Long idRestaurant, Pageable pageable);
 }

@@ -1,9 +1,6 @@
 package com.pragma.mealssquare.infraestructure.input.rest;
 
-import com.pragma.mealssquare.application.dto.DishDTORequest;
-import com.pragma.mealssquare.application.dto.DishDTOResponse;
-import com.pragma.mealssquare.application.dto.DishDTOStatusRequest;
-import com.pragma.mealssquare.application.dto.DishUpdateDTORequest;
+import com.pragma.mealssquare.application.dto.*;
 import com.pragma.mealssquare.application.handler.IDishHandler;
 
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
@@ -46,13 +43,12 @@ public class DishRestController {
     }
 
     @GetMapping("/list-dishes")
-    public ResponseEntity<?> listDishes(@RequestParam Long idRestaurant,
-                                        @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "10") int size,
-                                        @RequestParam(required = false) Long idCategory) {
+    public ResponseEntity<PageDTOResponse<DishDTOResponse>> listDishes(@RequestParam Long idRestaurant,
+                                                      @RequestParam int page,
+                                                      @RequestParam int size,
+                                                      @RequestParam(required = false) Long idCategory) {
         log.info("{}", ConstantsErrorMessage.LISTENER_OK_CONTROLLER);
-        List<DishDTOResponse> dishDTOResponseList = iDishHandler.getListDishes(idRestaurant, page, size, idCategory);
-        return ResponseEntity.ok(dishDTOResponseList);
+        return ResponseEntity.ok(iDishHandler.getDishesByIdRestaurant(idRestaurant, page, size, idCategory));
     }
 }
 

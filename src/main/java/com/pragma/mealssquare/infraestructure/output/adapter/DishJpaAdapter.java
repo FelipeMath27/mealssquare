@@ -1,16 +1,21 @@
 package com.pragma.mealssquare.infraestructure.output.adapter;
 
 import com.pragma.mealssquare.domain.model.Dish;
+import com.pragma.mealssquare.domain.model.PageResult;
+import com.pragma.mealssquare.domain.model.Pagination;
 import com.pragma.mealssquare.domain.spi.IDishPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
 import com.pragma.mealssquare.infraestructure.exceptions.InfrastructureException;
+import com.pragma.mealssquare.infraestructure.output.entity.DishEntity;
 import com.pragma.mealssquare.infraestructure.output.mapper.IDishEntityMapper;
 import com.pragma.mealssquare.infraestructure.output.repository.IDishRepository;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -41,8 +46,23 @@ public class DishJpaAdapter implements IDishPersistencePort {
     }
 
     @Override
-    public List<Dish> findAllByRestaurantIdAndCategoryId(Long idRestaurant, Long idCategory, Pageable pageable) {
-        return iDishEntityMapper.toDishList(
-                iDishRepository.findAllByRestaurantEntity_IdRestaurantAndCategoryEntity_IdCategory(idRestaurant, idCategory, pageable).getContent());
+    public PageResult<Dish> findDishesByIdRestaurant(Long idRestaurant, Long idCategory, Pagination pagination) {
+        Pageable pageable = PageRequest.of(
+                pagination.getPage(),
+                pagination.getSize()
+        );
+
+        Page<DishEntity> dishEntityPage;
+        if (idCategory != null) {
+            dishEntityPage = iDishRepository.findAllByRestaurantEntity_IdRestaurantAndCategoryEntity_IdCategory(idRestaurant, idCategory, pageable);
+        } else {
+            dishEntityPage = iDishRepository.findAllByRestaurantEntity_IdRestaurant(idRestaurant, pageable);
+        }
+
+        return new PageResult<>(
+                iDishEntityMapper.toDishList(dishEntityPage.getContent()),
+                dishEntityPage.getTotalPages(),
+                dishEntityPage.getTotalElements()
+        );
     }
 }

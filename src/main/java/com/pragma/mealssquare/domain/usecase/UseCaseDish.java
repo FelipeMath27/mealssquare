@@ -105,8 +105,7 @@ public class UseCaseDish implements IDishServicePort {
     }
 
     @Override
-    public List<Dish> getDishList(Long idRestaurant, int page, int size, Long idCategory) {
-        Pageable pageable = PageRequest.of(page, size);
-        return iDishPersistencePort.findAllByRestaurantIdAndCategoryId(idRestaurant,idCategory,pageable);
+    public PageResult<Dish> getDishList(Long idRestaurant, Long idCategory, Pagination pagination) {
+        return null;
     }
 }

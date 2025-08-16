@@ -1,9 +1,9 @@
 package com.pragma.mealssquare.domain.spi;
 
 import com.pragma.mealssquare.domain.model.Dish;
-import org.springframework.data.domain.Pageable;
+import com.pragma.mealssquare.domain.model.PageResult;
+import com.pragma.mealssquare.domain.model.Pagination;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface IDishPersistencePort {
@@ -11,5 +11,5 @@ public interface IDishPersistencePort {
 
     Optional<Dish> findById(Long idDish);
 
-    List<Dish> findAllByRestaurantIdAndCategoryId(Long idRestaurant, Long idCategory, Pageable pageable);
+    PageResult<Dish> findDishesByIdRestaurant(Long idRestaurant, Long idCategory, Pagination pagination);
 }
