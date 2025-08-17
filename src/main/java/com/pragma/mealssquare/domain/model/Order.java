@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,11 +16,10 @@ import java.util.List;
 public class Order {
     private Long idOrder;
     private Long idClient;
-    private LocalDate dateOrder;
-    private StatusOrder state;
-    private Long idChef;
     private Restaurant restaurant;
-    private List<OrderDish> orderDishList;
+    private LocalDate dateOrder;
+    private StatusOrder statusOrder;
+    private List<OrderDetail> orderDetailList;
 }
 
 

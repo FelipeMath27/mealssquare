@@ -1,6 +1,5 @@
 package com.pragma.mealssquare.application.dto;
 
-import com.pragma.mealssquare.domain.model.Rol;
 import com.pragma.mealssquare.domain.model.TypeDocumentEnum;
 import lombok.*;
 

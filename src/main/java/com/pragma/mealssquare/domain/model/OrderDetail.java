@@ -9,9 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDish {
-    private Long idOrderDish;
+public class OrderDetail {
+    private Long idOrderDetail;
     private Order order;
     private Dish dish;
-    private int quantity;
+    private Integer cantDish;
 }
