@@ -44,6 +44,6 @@ public class OrderEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY)
-    private List<OrderDetailEntity> orderDetailList = new ArrayList<>();
+    private List<OrderDetailEntity> orderDetailEntityList = new ArrayList<>();
 
 }

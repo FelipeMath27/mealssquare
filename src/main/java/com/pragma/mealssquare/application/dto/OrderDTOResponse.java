@@ -20,5 +20,4 @@ public class OrderDTOResponse {
     private LocalDate dateOrder;
     private StatusOrder statusOrder;
     private List<OrderDetailDTOResponse> orderDetailList;
-    private Double totalPrice;
 }

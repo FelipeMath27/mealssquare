@@ -79,7 +79,9 @@ public class ConstantsErrorMessage {
     /**Pagination*/
     public static final String INDEX_PAGE_INVALID = "Index page invalid, must be greater than or equal to 0";
     public static final String SIZE_PAGE_INVALID = "Size page invalid, must be greater than 0";
-
+    public static final String CANT_SAVE_ORDER = "Can't persist the new order in the system";
+    public static final String ORDER_NOT_FOUND = "This order doesn't exist in the system";
+    public static final String CLIENT_WITH_ORDERS = "Client has orders in progress, can't create a new order";
 
     private ConstantsErrorMessage(){}
         // Private constructor to prevent instantiation

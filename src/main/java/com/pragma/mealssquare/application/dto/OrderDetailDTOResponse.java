@@ -13,5 +13,4 @@ public class OrderDetailDTOResponse {
     private Long idOrderDetail;
     private DishDTOResponse dishDTOResponse;
     private Integer cantDish;
-    private Double subTotalPrice;
 }

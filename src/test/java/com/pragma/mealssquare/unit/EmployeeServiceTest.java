@@ -9,7 +9,6 @@ import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.usecase.UseCaseEmployee;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.domain.validator.ValidatorService;
-import com.pragma.mealssquare.infraestructure.exceptions.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
