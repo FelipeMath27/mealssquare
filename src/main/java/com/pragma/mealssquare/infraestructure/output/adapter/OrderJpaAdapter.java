@@ -27,7 +27,9 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
     @Override
     public Order saveOrder(Order order) {
         try {
-            return iOrderEntityMapper.toOrder(iOrderRepository.save(iOrderEntityMapper.toOrderEntity(order)));
+            OrderEntity orderEntity = iOrderEntityMapper.toOrderEntity(order);
+            orderEntity.getOrderDetailEntityList().forEach(orderDetailEntity -> orderDetailEntity.setOrderEntity(orderEntity));
+            return iOrderEntityMapper.toOrder(iOrderRepository.save(orderEntity));
         } catch (DataAccessException | PersistenceException ex) {
             throw new CustomException(ConstantsErrorMessage.CANT_SAVE_ORDER + " " + ex.getMessage());
         }

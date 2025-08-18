@@ -12,7 +12,7 @@ import java.util.List;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface RestaurantResponseMapper {
-    RestaurantDTOResponse toRestaurantDtoResponse(Restaurant restaurant);
+    RestaurantDTOResponse toDTOResponse(Restaurant restaurant);
 
     List<RestaurantDTOResponse> toRestaurantDtoList(List<Restaurant> restaurant);
 }

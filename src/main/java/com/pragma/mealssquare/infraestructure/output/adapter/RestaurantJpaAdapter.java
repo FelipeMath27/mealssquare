@@ -57,24 +57,9 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
     }
 
     @Override
-    public Optional<UserDTOResponse> findUserByEmail(String email) {
-        return Optional.ofNullable(Optional.ofNullable(email)
-                .map(iUsersMealsSquare::getUserByEmail)
-                .orElseThrow(() -> new MicroserviceConnectionException(ConstantsErrorMessage.CANT_CONNECT_MICROSERVICES)));
-    }
-
-    @Override
-    public Optional<UserDTOResponse> findUserById(Long id) {
-        return Optional.ofNullable(Optional.ofNullable(id)
-                .map(iUsersMealsSquare::getUserById)
-                .orElseThrow(() -> new MicroserviceConnectionException(ConstantsErrorMessage.CANT_CONNECT_MICROSERVICES)));
-    }
-
-    @Override
     public Optional<Restaurant> findRestaurantById(Long idRestaurant) {
-        Optional<RestaurantEntity> restaurantEntityOptional = iRestaurantRepository.findById(idRestaurant);
-        return Optional.ofNullable(restaurantEntityOptional.map(restaurantEntityMapper::toRestaurant)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ConstantsErrorMessage.RESTAURANT_NOT_FOUND)));
+        return iRestaurantRepository.findById(idRestaurant)
+                .map(restaurantEntityMapper::toRestaurant);
     }
 
     @Override

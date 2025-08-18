@@ -14,9 +14,5 @@ public interface IRestaurantPersistencePort {
 
     Optional<Restaurant> findRestaurantById(Long idRestaurant);
 
-    Optional<UserDTOResponse> findUserByEmail(String email);
-    Optional<UserDTOResponse> findUserById(Long id);
-
-
     PageResult<Restaurant> getAllRestaurants(Pagination pagination);
 }

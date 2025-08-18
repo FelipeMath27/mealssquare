@@ -14,9 +14,11 @@ import java.util.List;
 public interface IOrderEntityMapper {
 
     @Mapping(source = "restaurant.idRestaurant", target = "restaurantEntity.idRestaurant")
+    @Mapping(source = "orderDetailList" , target = "orderDetailEntityList")
     OrderEntity toOrderEntity(Order order);
 
     @Mapping(source = "restaurantEntity.idRestaurant", target = "restaurant.idRestaurant")
+    @Mapping(source = "orderDetailEntityList" , target = "orderDetailList")
     Order toOrder(OrderEntity orderEntity);
 
     List<Order> toOrderList(List<OrderEntity> orderEntities);

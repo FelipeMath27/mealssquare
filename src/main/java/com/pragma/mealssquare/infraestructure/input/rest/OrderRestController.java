@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/order")
 @Slf4j
-public class OrderController {
+public class OrderRestController {
     private final IOrderHandler iOrderHandler;
 
     @PostMapping("/create-order")

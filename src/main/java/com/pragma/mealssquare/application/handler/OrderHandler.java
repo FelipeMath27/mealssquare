@@ -6,7 +6,9 @@ import com.pragma.mealssquare.application.dto.UserDTOResponse;
 import com.pragma.mealssquare.application.mapper.IOrderDetailRequestMapper;
 import com.pragma.mealssquare.application.mapper.IOrderRequestMapper;
 import com.pragma.mealssquare.application.mapper.IOrderResponseMapper;
+import com.pragma.mealssquare.application.mapper.RestaurantResponseMapper;
 import com.pragma.mealssquare.domain.api.IOrderServicePort;
+import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.Order;
 import com.pragma.mealssquare.domain.model.OrderDetail;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
@@ -29,12 +31,16 @@ public class OrderHandler implements IOrderHandler{
     private final IOrderRequestMapper iOrderRequestMapper;
     private final IOrderResponseMapper iOrderResponseMapper;
     private final IOrderDetailRequestMapper iOrderDetailRequestMapper;
+    private final RestaurantResponseMapper restaurantResponseMapper;
 
     @Override
     public OrderDTOResponse saveOrder(OrderDTORequest orderDTORequest) {
         UserDTOResponse userDTOResponse;
         try {
             Order order = iOrderRequestMapper.toOrder(orderDTORequest);
+            if (orderDTORequest.getIdClient() == null) {
+                throw new DomainException("El idClient no puede ser nulo");
+            }
             userDTOResponse = iUserFeignHandler.getUserById(orderDTORequest.getIdClient());
             List<OrderDetail> orderDetailList = orderDTORequest.getOrderDetailList()
                     .stream()
