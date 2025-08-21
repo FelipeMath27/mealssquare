@@ -2,6 +2,7 @@ package com.pragma.mealssquare.unit;
 
 import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.*;
+import com.pragma.mealssquare.domain.spi.IDishPersistencePort;
 import com.pragma.mealssquare.domain.spi.IOrderPersistencePort;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.usecase.UseCaseOrder;
@@ -26,6 +27,9 @@ class OrderServiceTest {
 
     @Mock
     private IRestaurantPersistencePort iRestaurantPersistencePort;
+
+    @Mock
+    private IDishPersistencePort iDishPersistencePort;
 
     @InjectMocks
     private UseCaseOrder useCaseOrder;
@@ -61,6 +65,9 @@ class OrderServiceTest {
     void test_createOrder(){
         when(iOrderPersistencePort.findAllByIdClient(clientUser.getIdUser())).thenReturn(List.of());
         when(iRestaurantPersistencePort.findRestaurantById(restaurant.getIdRestaurant())).thenReturn(Optional.of(restaurant));
+        when(iDishPersistencePort.findById(1L)).thenReturn(Optional.of(dish));
+        when(iDishPersistencePort.findById(2L)).thenReturn(Optional.of(dish2));
+        when(iDishPersistencePort.findById(3L)).thenReturn(Optional.of(dish3));
         when(iOrderPersistencePort.saveOrder(order)).thenReturn(order);
 
         Order result = useCaseOrder.saveOrder(order, clientUser.getIdUser());

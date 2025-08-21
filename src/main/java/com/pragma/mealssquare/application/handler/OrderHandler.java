@@ -39,7 +39,7 @@ public class OrderHandler implements IOrderHandler{
         try {
             Order order = iOrderRequestMapper.toOrder(orderDTORequest);
             if (orderDTORequest.getIdClient() == null) {
-                throw new DomainException("El idClient no puede ser nulo");
+                throw new DomainException(ConstantsErrorMessage.CANT_BE_NULL);
             }
             userDTOResponse = iUserFeignHandler.getUserById(orderDTORequest.getIdClient());
             List<OrderDetail> orderDetailList = orderDTORequest.getOrderDetailList()
