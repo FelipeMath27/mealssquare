@@ -2,6 +2,7 @@ package com.pragma.mealssquare.application.handler;
 
 import com.pragma.mealssquare.application.dto.OrderDTORequest;
 import com.pragma.mealssquare.application.dto.OrderDTOResponse;
+import com.pragma.mealssquare.application.dto.PageDTOResponse;
 import com.pragma.mealssquare.application.dto.UserDTOResponse;
 import com.pragma.mealssquare.application.mapper.IOrderDetailRequestMapper;
 import com.pragma.mealssquare.application.mapper.IOrderRequestMapper;
@@ -11,6 +12,9 @@ import com.pragma.mealssquare.domain.api.IOrderServicePort;
 import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.Order;
 import com.pragma.mealssquare.domain.model.OrderDetail;
+import com.pragma.mealssquare.domain.model.StatusOrder;
+import com.pragma.mealssquare.domain.pagination.PageResult;
+import com.pragma.mealssquare.domain.pagination.Pagination;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
 import com.pragma.mealssquare.infraestructure.exceptions.InfrastructureException;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +36,10 @@ public class OrderHandler implements IOrderHandler{
     private final IOrderResponseMapper iOrderResponseMapper;
     private final IOrderDetailRequestMapper iOrderDetailRequestMapper;
     private final RestaurantResponseMapper restaurantResponseMapper;
+    private UserDTOResponse userDTOResponse;
 
     @Override
     public OrderDTOResponse saveOrder(OrderDTORequest orderDTORequest) {
-        UserDTOResponse userDTOResponse;
         try {
             Order order = iOrderRequestMapper.toOrder(orderDTORequest);
             if (orderDTORequest.getIdClient() == null) {
@@ -53,6 +57,25 @@ public class OrderHandler implements IOrderHandler{
             return orderDTOResponse;
         } catch (UsernameNotFoundException ex){
             throw new InfrastructureException(ConstantsErrorMessage.USER_NOT_FOUD,ex);
+        }
+    }
+
+    @Override
+    public PageDTOResponse<OrderDTOResponse> getAllOrders(int page, int size, StatusOrder statusOrder, String email) {
+        try {
+            Pagination pagination = new Pagination(page,size);
+            userDTOResponse = iUserFeignHandler.getUserByEmail(email);
+            Long idEmployee = userDTOResponse.getIdUser();
+            PageResult<Order> pageResult = iOrderServicePort.getOrderListByStatus(idEmployee,statusOrder,pagination);
+            return new PageDTOResponse<>(
+                    iOrderResponseMapper.toOrderDtoList(pageResult.content()),
+                    page,
+                    size,
+                    pageResult.totalPages(),
+                    pageResult.totalElements()
+            );
+        } catch (UsernameNotFoundException ex){
+            throw new DomainException(ConstantsErrorMessage.USER_NOT_FOUD);
         }
     }
 }

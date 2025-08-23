@@ -53,8 +53,9 @@ public class BeanConfiguration {
     @Bean
     public IOrderServicePort iOrderServicePort(IOrderPersistencePort iOrderPersistencePort,
                                                IRestaurantPersistencePort iRestaurantPersistencePort,
-                                               IDishPersistencePort iDishPersistencePort){
-        return new UseCaseOrder(iRestaurantPersistencePort, iOrderPersistencePort, iDishPersistencePort);
+                                               IDishPersistencePort iDishPersistencePort,
+                                               IEmployeePersistencePort iEmployeePersistencePort){
+        return new UseCaseOrder(iRestaurantPersistencePort, iOrderPersistencePort, iDishPersistencePort,iEmployeePersistencePort);
     }
 
 }
