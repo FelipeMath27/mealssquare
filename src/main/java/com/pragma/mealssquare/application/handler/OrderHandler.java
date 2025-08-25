@@ -78,4 +78,9 @@ public class OrderHandler implements IOrderHandler{
             throw new DomainException(ConstantsErrorMessage.USER_NOT_FOUD);
         }
     }
+
+    @Override
+    public PageDTOResponse<OrderDTOResponse> assignOrderToEmployee(Long idOrder, String email, StatusOrder statusOrder) {
+        return null;
+    }
 }

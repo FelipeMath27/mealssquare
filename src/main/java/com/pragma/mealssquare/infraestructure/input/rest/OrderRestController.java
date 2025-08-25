@@ -35,4 +35,12 @@ public class OrderRestController {
         log.info("{}",ConstantsErrorMessage.LISTENER_OK_CONTROLLER);
         return ResponseEntity.ok(iOrderHandler.getAllOrders(page,size,statusOrder,authentication.getName()));
     }
+
+    @PatchMapping
+    public ResponseEntity<PageDTOResponse<OrderDTOResponse>> assignOrderToEmployee(@RequestParam Long idOrder,
+                                                                                   Authentication authentication,
+                                                                                   @RequestParam StatusOrder statusOrder){
+        log.info("{}",ConstantsErrorMessage.LISTENER_OK_CONTROLLER);
+        return ResponseEntity.ok(iOrderHandler.assignOrderToEmployee(idOrder,authentication.getName(),statusOrder));
+    }
 }

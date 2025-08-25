@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/dish/update-dish").hasRole(TypeRolEnum.OWNER.name())
                         .requestMatchers("/dish/status-dish").hasRole(TypeRolEnum.OWNER.name())
                         .requestMatchers("/employee/create-employee").hasRole(TypeRolEnum.OWNER.name())
+                        .requestMatchers("order/list-order").hasRole(TypeRolEnum.EMPLOYEE.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
