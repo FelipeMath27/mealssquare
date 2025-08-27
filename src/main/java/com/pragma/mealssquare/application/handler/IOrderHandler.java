@@ -10,5 +10,5 @@ public interface IOrderHandler {
 
     PageDTOResponse<OrderDTOResponse> getAllOrders(int page, int size, StatusOrder statusOrder, String email);
 
-    PageDTOResponse<OrderDTOResponse> assignOrderToEmployee(Long idOrder, String email, StatusOrder statusOrder);
+    OrderDTOResponse assignOrderToEmployee(Long idOrder, String email);
 }

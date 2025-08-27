@@ -28,6 +28,9 @@ public class OrderEntity {
     @Column(name = "idClient", nullable = false)
     private Long idClient;
 
+    @Column(name = "idEmployee")
+    private Long idEmployee;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idRestaurant", nullable = false)
     private RestaurantEntity restaurantEntity;

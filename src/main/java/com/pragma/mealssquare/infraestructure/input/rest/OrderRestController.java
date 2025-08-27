@@ -37,10 +37,9 @@ public class OrderRestController {
     }
 
     @PatchMapping
-    public ResponseEntity<PageDTOResponse<OrderDTOResponse>> assignOrderToEmployee(@RequestParam Long idOrder,
-                                                                                   Authentication authentication,
-                                                                                   @RequestParam StatusOrder statusOrder){
+    public ResponseEntity<OrderDTOResponse> assignOrderToEmployee(@RequestParam Long idOrder,
+                                                                  Authentication authentication){
         log.info("{}",ConstantsErrorMessage.LISTENER_OK_CONTROLLER);
-        return ResponseEntity.ok(iOrderHandler.assignOrderToEmployee(idOrder,authentication.getName(),statusOrder));
+        return ResponseEntity.ok(iOrderHandler.assignOrderToEmployee(idOrder,authentication.getName()));
     }
 }

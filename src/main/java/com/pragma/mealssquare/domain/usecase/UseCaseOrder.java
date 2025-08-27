@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -54,5 +56,27 @@ public class UseCaseOrder implements IOrderServicePort {
     public PageResult<Order> getOrderListByStatus(Long idEmployee, StatusOrder statusOrder, Pagination pagination) {
         Employee employee = iEmployeePersistencePort.findById(idEmployee).orElseThrow(() -> new DomainException(ConstantsErrorMessage.EMPLOYEE_NOT_FOUND));
         return iOrderPersistencePort.findAllOrdersByIdRestaurant(employee.getRestaurant().getIdRestaurant(), statusOrder, pagination);
+    }
+
+    @Override
+    public Order updateOrderassign(Long idOrder, Long idEmployee) {
+        final Employee employee = iEmployeePersistencePort.findById(idEmployee)
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.EMPLOYEE_NOT_FOUND));
+
+        final Order order = iOrderPersistencePort.findById(idOrder)
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.ORDER_NOT_FOUND));
+
+        if (!Objects.equals(order.getRestaurant().getIdRestaurant(), employee.getRestaurant().getIdRestaurant())) {
+            throw new DomainException(ConstantsErrorMessage.ORDER_NOT_BELONG_TO_EMPLOYEE_RESTAURANT);
+        }
+
+        if (order.getStatusOrder() != StatusOrder.PENDING) {
+            throw new DomainException(ConstantsErrorMessage.ORDER_CANNOT_BE_ASSIGNED);
+        }
+
+        order.setIdEmployee(idEmployee);
+        order.setStatusOrder(StatusOrder.IN_PROGRESS);
+
+        return iOrderPersistencePort.saveOrder(order);
     }
 }

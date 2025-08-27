@@ -56,7 +56,7 @@ public class OrderHandler implements IOrderHandler{
             orderDTOResponse.setClientDTOResponse(userDTOResponse);
             return orderDTOResponse;
         } catch (UsernameNotFoundException ex){
-            throw new InfrastructureException(ConstantsErrorMessage.USER_NOT_FOUD,ex);
+            throw new DomainException(ConstantsErrorMessage.USER_NOT_FOUD + "{}" + ex);
         }
     }
 
@@ -80,7 +80,15 @@ public class OrderHandler implements IOrderHandler{
     }
 
     @Override
-    public PageDTOResponse<OrderDTOResponse> assignOrderToEmployee(Long idOrder, String email, StatusOrder statusOrder) {
-        return null;
+    public OrderDTOResponse  assignOrderToEmployee(Long idOrder, String email) {
+        try {
+            userDTOResponse = iUserFeignHandler.getUserByEmail(email);
+            Long idEmployee = userDTOResponse.getIdUser();
+            return iOrderResponseMapper.toResponse(iOrderServicePort.updateOrderassign(idOrder,idEmployee));
+        } catch (UsernameNotFoundException ex){
+            throw new DomainException(ConstantsErrorMessage.USER_NOT_FOUD + "{}" + ex);
+        }
+
+
     }
 }

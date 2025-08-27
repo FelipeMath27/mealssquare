@@ -16,6 +16,7 @@ import java.util.List;
 public class Order {
     private Long idOrder;
     private Long idClient;
+    private Long idEmployee;
     private Restaurant restaurant;
     private LocalDate dateOrder;
     private StatusOrder statusOrder;

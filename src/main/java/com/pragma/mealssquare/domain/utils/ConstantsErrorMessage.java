@@ -83,7 +83,8 @@ public class ConstantsErrorMessage {
     public static final String ORDER_NOT_FOUND = "This order doesn't exist in the system";
     public static final String CLIENT_WITH_ORDERS = "Client has orders in progress, can't create a new order";
     public static final String EMPLOYEE_NOT_FOUND = "Employee not found";
-
+    public static final String ORDER_NOT_BELONG_TO_EMPLOYEE_RESTAURANT = "This order doesn't belong to the employee's restaurant";
+    public static final String ORDER_CANNOT_BE_ASSIGNED = "This order cannot be assigned because its status is not PENDING";
     private ConstantsErrorMessage(){}
         // Private constructor to prevent instantiation
 }

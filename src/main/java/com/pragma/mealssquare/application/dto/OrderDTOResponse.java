@@ -17,6 +17,7 @@ public class OrderDTOResponse {
     private Long idOrder;
     private RestaurantDTOResponse restaurantDTOResponse;
     private UserDTOResponse clientDTOResponse;
+    private UserDTOResponse employeeDTOResponse;
     private LocalDate dateOrder;
     private StatusOrder statusOrder;
     private List<OrderDetailDTOResponse> orderDetailList;
