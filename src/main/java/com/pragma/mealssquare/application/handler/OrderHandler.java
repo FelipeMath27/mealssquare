@@ -1,13 +1,9 @@
 package com.pragma.mealssquare.application.handler;
 
-import com.pragma.mealssquare.application.dto.OrderDTORequest;
-import com.pragma.mealssquare.application.dto.OrderDTOResponse;
-import com.pragma.mealssquare.application.dto.PageDTOResponse;
-import com.pragma.mealssquare.application.dto.UserDTOResponse;
+import com.pragma.mealssquare.application.dto.*;
 import com.pragma.mealssquare.application.mapper.IOrderDetailRequestMapper;
 import com.pragma.mealssquare.application.mapper.IOrderRequestMapper;
 import com.pragma.mealssquare.application.mapper.IOrderResponseMapper;
-import com.pragma.mealssquare.application.mapper.RestaurantResponseMapper;
 import com.pragma.mealssquare.domain.api.IOrderServicePort;
 import com.pragma.mealssquare.domain.exception.DomainException;
 import com.pragma.mealssquare.domain.model.Order;
@@ -16,7 +12,6 @@ import com.pragma.mealssquare.domain.model.StatusOrder;
 import com.pragma.mealssquare.domain.pagination.PageResult;
 import com.pragma.mealssquare.domain.pagination.Pagination;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
-import com.pragma.mealssquare.infraestructure.exceptions.InfrastructureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,8 +30,10 @@ public class OrderHandler implements IOrderHandler{
     private final IOrderRequestMapper iOrderRequestMapper;
     private final IOrderResponseMapper iOrderResponseMapper;
     private final IOrderDetailRequestMapper iOrderDetailRequestMapper;
-    private final RestaurantResponseMapper restaurantResponseMapper;
+    private final ITraceabilityFeignHandler iTraceabilityFeignHandler;
+
     private UserDTOResponse userDTOResponse;
+    private TraceabilityDTORequest traceabilityDTORequest;
 
     @Override
     public OrderDTOResponse saveOrder(OrderDTORequest orderDTORequest) {
@@ -54,6 +51,7 @@ public class OrderHandler implements IOrderHandler{
             order.setOrderDetailList(orderDetailList);
             OrderDTOResponse orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.saveOrder(order, userDTOResponse.getIdUser()));
             orderDTOResponse.setClientDTOResponse(userDTOResponse);
+            iTraceabilityFeignHandler.writeTraceability(buildTraceabilityDTORequest(orderDTOResponse));
             return orderDTOResponse;
         } catch (UsernameNotFoundException ex){
             throw new DomainException(ConstantsErrorMessage.USER_NOT_FOUD + "{}" + ex);
@@ -84,11 +82,36 @@ public class OrderHandler implements IOrderHandler{
         try {
             userDTOResponse = iUserFeignHandler.getUserByEmail(email);
             Long idEmployee = userDTOResponse.getIdUser();
-            return iOrderResponseMapper.toResponse(iOrderServicePort.updateOrderassign(idOrder,idEmployee));
+            OrderDTOResponse orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.updateOrderAssign(idOrder,idEmployee));
+            iTraceabilityFeignHandler.writeTraceability(buildTraceabilityDTORequest(orderDTOResponse));
+            return orderDTOResponse;
         } catch (UsernameNotFoundException ex){
             throw new DomainException(ConstantsErrorMessage.USER_NOT_FOUD + "{}" + ex);
         }
+    }
 
+    @Override
+    public OrderDTOResponse updateStatusOrder(Long idOrder, StatusOrder statusOrder, String name, String pin ) {
+        try {
+            userDTOResponse = iUserFeignHandler.getUserByEmail(name);
+            Long idEmployee = userDTOResponse.getIdUser();
+            OrderDTOResponse orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.updateStatusOrder(idOrder,statusOrder,idEmployee,pin));
+            iTraceabilityFeignHandler.writeTraceability(buildTraceabilityDTORequest(orderDTOResponse));
+            return orderDTOResponse;
+        } catch (UsernameNotFoundException ex){
+            throw new DomainException(ConstantsErrorMessage.USER_NOT_FOUD + "{}" + ex);
+        }
+    }
 
+    private TraceabilityDTORequest buildTraceabilityDTORequest(OrderDTOResponse orderDTOResponse) {
+        log.info(ConstantsErrorMessage.BUILDING_TRACEABILITY_DTO_REQUEST);
+        return TraceabilityDTORequest.builder()
+                .idOrder(orderDTOResponse.getIdOrder())
+                .idClient(orderDTOResponse.getClientDTOResponse().getIdUser())
+                .emailClient(orderDTOResponse.getClientDTOResponse().getEmail())
+                .newStatus(orderDTOResponse.getStatusOrder())
+                .idEmployee(orderDTOResponse.getEmployeeDTOResponse().getIdUser())
+                .emailEmployee(orderDTOResponse.getEmployeeDTOResponse().getEmail())
+                .build();
     }
 }

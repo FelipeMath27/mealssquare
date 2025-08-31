@@ -10,5 +10,7 @@ public interface IOrderServicePort {
 
     PageResult<Order> getOrderListByStatus(Long idEmployee, StatusOrder statusOrder, Pagination pagination);
 
-    Order updateOrderassign(Long idOrder, Long idEmployee);
+    Order updateOrderAssign(Long idOrder, Long idEmployee);
+
+    Order updateStatusOrder(Long idOrder, StatusOrder statusOrder, Long idEmployee, String pin);
 }

@@ -59,10 +59,9 @@ public class UseCaseOrder implements IOrderServicePort {
     }
 
     @Override
-    public Order updateOrderassign(Long idOrder, Long idEmployee) {
+    public Order updateOrderAssign(Long idOrder, Long idEmployee) {
         final Employee employee = iEmployeePersistencePort.findById(idEmployee)
                 .orElseThrow(() -> new DomainException(ConstantsErrorMessage.EMPLOYEE_NOT_FOUND));
-
         final Order order = iOrderPersistencePort.findById(idOrder)
                 .orElseThrow(() -> new DomainException(ConstantsErrorMessage.ORDER_NOT_FOUND));
 
@@ -79,4 +78,23 @@ public class UseCaseOrder implements IOrderServicePort {
 
         return iOrderPersistencePort.saveOrder(order);
     }
+
+    @Override
+    public Order updateStatusOrder(Long idOrder, StatusOrder statusOrder, Long idEmployee, String pin) {
+        final Employee employee = iEmployeePersistencePort.findById(idEmployee)
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.EMPLOYEE_NOT_FOUND));
+        final Order order = iOrderPersistencePort.findById(idOrder)
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.ORDER_NOT_FOUND));
+        if (!Objects.equals(order.getRestaurant().getIdRestaurant(), employee.getRestaurant().getIdRestaurant())) {
+            throw new DomainException(ConstantsErrorMessage.ORDER_NOT_BELONG_TO_EMPLOYEE_RESTAURANT);
+        }
+        StatusOrder previousStatus = order.getStatusOrder();
+        if (!statusOrderValidators.isValidTransition(previousStatus, statusOrder)) {
+            throw new DomainException(ConstantsErrorMessage.INVALID_ORDER_TRANSITION);
+        }
+        return null;
+    }
+
+
+
 }

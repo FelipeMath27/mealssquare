@@ -85,6 +85,8 @@ public class ConstantsErrorMessage {
     public static final String EMPLOYEE_NOT_FOUND = "Employee not found";
     public static final String ORDER_NOT_BELONG_TO_EMPLOYEE_RESTAURANT = "This order doesn't belong to the employee's restaurant";
     public static final String ORDER_CANNOT_BE_ASSIGNED = "This order cannot be assigned because its status is not PENDING";
+    public static final String BUILDING_TRACEABILITY_DTO_REQUEST = "Building TraceabilityDTORequest from OrderDTOResponse";
+
     private ConstantsErrorMessage(){}
         // Private constructor to prevent instantiation
 }
