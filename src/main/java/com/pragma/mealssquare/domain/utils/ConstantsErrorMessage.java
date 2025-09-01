@@ -86,6 +86,11 @@ public class ConstantsErrorMessage {
     public static final String ORDER_NOT_BELONG_TO_EMPLOYEE_RESTAURANT = "This order doesn't belong to the employee's restaurant";
     public static final String ORDER_CANNOT_BE_ASSIGNED = "This order cannot be assigned because its status is not PENDING";
     public static final String BUILDING_TRACEABILITY_DTO_REQUEST = "Building TraceabilityDTORequest from OrderDTOResponse";
+    public static final String INVALID_ORDER_TRANSITION = "Invalid order status transition";
+
+    public static final String PIN_CONSTANT_NUMBER = "00000000";
+    public static final String PIN_REQUIRED = "PIN is required to update the order status to DELIVERED";
+    public static final String INVALID_PIN = "Invalid PIN provided";
 
     private ConstantsErrorMessage(){}
         // Private constructor to prevent instantiation

@@ -10,6 +10,8 @@ import com.pragma.mealssquare.domain.spi.IEmployeePersistencePort;
 import com.pragma.mealssquare.domain.spi.IOrderPersistencePort;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
+import com.pragma.mealssquare.domain.validator.EmployeeOrder;
+import com.pragma.mealssquare.domain.validator.StatusOrderValidators;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +28,7 @@ public class UseCaseOrder implements IOrderServicePort {
     private final IOrderPersistencePort iOrderPersistencePort;
     private final IDishPersistencePort iDishPersistencePort;
     private final IEmployeePersistencePort iEmployeePersistencePort;
+    private static final StatusOrderValidators statusOrderValidators = new StatusOrderValidators();
 
     @Override
     public Order saveOrder(Order order, Long idUser) {
@@ -60,41 +63,63 @@ public class UseCaseOrder implements IOrderServicePort {
 
     @Override
     public Order updateOrderAssign(Long idOrder, Long idEmployee) {
-        final Employee employee = iEmployeePersistencePort.findById(idEmployee)
-                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.EMPLOYEE_NOT_FOUND));
-        final Order order = iOrderPersistencePort.findById(idOrder)
-                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.ORDER_NOT_FOUND));
-
-        if (!Objects.equals(order.getRestaurant().getIdRestaurant(), employee.getRestaurant().getIdRestaurant())) {
-            throw new DomainException(ConstantsErrorMessage.ORDER_NOT_BELONG_TO_EMPLOYEE_RESTAURANT);
-        }
+        EmployeeOrder validateEmployeeAndOrder = validateEmployeeAndOrder(idEmployee, idOrder);
+        final Employee employee = validateEmployeeAndOrder.employee();
+        final Order order = validateEmployeeAndOrder.order();
 
         if (order.getStatusOrder() != StatusOrder.PENDING) {
             throw new DomainException(ConstantsErrorMessage.ORDER_CANNOT_BE_ASSIGNED);
         }
 
-        order.setIdEmployee(idEmployee);
+        order.setIdEmployee(employee.getIdEmployee());
+
+        if(!Objects.equals(order.getIdEmployee(), employee.getIdEmployee())){
+            throw new DomainException(ConstantsErrorMessage.UNAUTHORIZED_OPERATION);
+        }
+
         order.setStatusOrder(StatusOrder.IN_PROGRESS);
 
         return iOrderPersistencePort.saveOrder(order);
     }
 
     @Override
-    public Order updateStatusOrder(Long idOrder, StatusOrder statusOrder, Long idEmployee, String pin) {
-        final Employee employee = iEmployeePersistencePort.findById(idEmployee)
-                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.EMPLOYEE_NOT_FOUND));
-        final Order order = iOrderPersistencePort.findById(idOrder)
-                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.ORDER_NOT_FOUND));
-        if (!Objects.equals(order.getRestaurant().getIdRestaurant(), employee.getRestaurant().getIdRestaurant())) {
-            throw new DomainException(ConstantsErrorMessage.ORDER_NOT_BELONG_TO_EMPLOYEE_RESTAURANT);
+    public Order updateStatusOrder(Long idOrder, StatusOrder statusOrder, Long idEmployee, String pin, Optional<String> responsePinOpt) {
+        EmployeeOrder validateEmployeeAndOrder = validateEmployeeAndOrder(idEmployee, idOrder);
+        final Order order = validateEmployeeAndOrder.order();
+        final Employee employee = validateEmployeeAndOrder.employee();
+
+        if(!Objects.equals(order.getIdEmployee(), employee.getIdEmployee())){
+            throw new DomainException(ConstantsErrorMessage.UNAUTHORIZED_OPERATION);
         }
+
         StatusOrder previousStatus = order.getStatusOrder();
         if (!statusOrderValidators.isValidTransition(previousStatus, statusOrder)) {
             throw new DomainException(ConstantsErrorMessage.INVALID_ORDER_TRANSITION);
         }
-        return null;
+        if (StatusOrder.DELIVERED.equals(statusOrder)){
+            String responsePin = responsePinOpt.orElseThrow(() -> new DomainException(ConstantsErrorMessage.PIN_REQUIRED));
+            if(!Objects.equals(pin, responsePin)){
+                throw new DomainException(ConstantsErrorMessage.INVALID_PIN);
+            }
+        }
+        order.setStatusOrder(statusOrder);
+        return iOrderPersistencePort.saveOrder(order);
     }
 
+    @Override
+    public Order getOrderById(Long idOrder) {
+        return iOrderPersistencePort.findById(idOrder).
+                orElseThrow(()-> new DomainException(ConstantsErrorMessage.ORDER_NOT_FOUND));
+    }
 
-
+    private EmployeeOrder validateEmployeeAndOrder(Long idEmployee, Long idOrder) {
+        Employee employee = iEmployeePersistencePort.findById(idEmployee)
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.EMPLOYEE_NOT_FOUND));
+        Order order = iOrderPersistencePort.findById(idOrder)
+                .orElseThrow(() -> new DomainException(ConstantsErrorMessage.ORDER_NOT_FOUND));
+        if (!Objects.equals(order.getRestaurant().getIdRestaurant(), employee.getRestaurant().getIdRestaurant())) {
+            throw new DomainException(ConstantsErrorMessage.ORDER_NOT_BELONG_TO_EMPLOYEE_RESTAURANT);
+        }
+        return new EmployeeOrder(employee, order);
+    }
 }

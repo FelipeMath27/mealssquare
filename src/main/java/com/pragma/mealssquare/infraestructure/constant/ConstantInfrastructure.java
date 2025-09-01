@@ -18,6 +18,12 @@ public class ConstantInfrastructure {
     public static final String ERROR_CONNECT_TRACEABILITY_FEIGN = "Error connecting to Traceability microservice via Feign: ";
     public static final String ERROR_TRACEABILITY = "Error creating traceability via Feign: ";
 
+    /** Notification service*/
+    public static final String SEND_NOTIFICATION_DATA = "Feign client - Sending notification data to Notification service";
+    public static final String SUCCESSFUL_NOTIFICATION_DATA = "Feign client - Notification data sent successfully";
+    public static final String ERROR_CONNECT_NOTIFICATION_FEIGN = "Error connecting to Notification microservice via Feign: ";
+    public static final String ERROR_NOTIFICATION = "Error sending notification via Feign: ";
+
 
     private ConstantInfrastructure() {
     }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,9 +32,13 @@ public class OrderHandler implements IOrderHandler{
     private final IOrderResponseMapper iOrderResponseMapper;
     private final IOrderDetailRequestMapper iOrderDetailRequestMapper;
     private final ITraceabilityFeignHandler iTraceabilityFeignHandler;
+    private final INotificationFeignSMSHandler iNotificationFeignSMSHandler;
 
     private UserDTOResponse userDTOResponse;
     private TraceabilityDTORequest traceabilityDTORequest;
+    private NotificationDTOResponse notificationDTOResponse;
+    private NotificationDTORequest notificationDTORequest;
+    OrderDTOResponse orderDTOResponse, updateOrderDTOResponse;
 
     @Override
     public OrderDTOResponse saveOrder(OrderDTORequest orderDTORequest) {
@@ -82,7 +87,7 @@ public class OrderHandler implements IOrderHandler{
         try {
             userDTOResponse = iUserFeignHandler.getUserByEmail(email);
             Long idEmployee = userDTOResponse.getIdUser();
-            OrderDTOResponse orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.updateOrderAssign(idOrder,idEmployee));
+            orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.updateOrderAssign(idOrder,idEmployee));
             iTraceabilityFeignHandler.writeTraceability(buildTraceabilityDTORequest(orderDTOResponse));
             return orderDTOResponse;
         } catch (UsernameNotFoundException ex){
@@ -94,8 +99,16 @@ public class OrderHandler implements IOrderHandler{
     public OrderDTOResponse updateStatusOrder(Long idOrder, StatusOrder statusOrder, String name, String pin ) {
         try {
             userDTOResponse = iUserFeignHandler.getUserByEmail(name);
-            Long idEmployee = userDTOResponse.getIdUser();
-            OrderDTOResponse orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.updateStatusOrder(idOrder,statusOrder,idEmployee,pin));
+            orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.getOrderById(idOrder));
+            notificationDTORequest.setPhoneNumber(orderDTOResponse.getClientDTOResponse().getPhoneNumberUser());
+            if (StatusOrder.DISH_READY.equals(orderDTOResponse.getStatusOrder())){
+                String responsePin = iNotificationFeignSMSHandler.sendSMS(notificationDTORequest).getPin();
+                updateOrderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.updateStatusOrder(orderDTOResponse.getIdOrder(),
+                        statusOrder,userDTOResponse.getIdUser(),pin, Optional.of(responsePin)));
+            } else {
+                updateOrderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.updateStatusOrder(orderDTOResponse.getIdOrder(),
+                        statusOrder,userDTOResponse.getIdUser(),pin, Optional.empty()));
+            }
             iTraceabilityFeignHandler.writeTraceability(buildTraceabilityDTORequest(orderDTOResponse));
             return orderDTOResponse;
         } catch (UsernameNotFoundException ex){

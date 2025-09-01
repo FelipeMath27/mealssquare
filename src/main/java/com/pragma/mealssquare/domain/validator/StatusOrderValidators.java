@@ -14,8 +14,7 @@ public class StatusOrderValidators {
     static {
         VALID_TRANSITIONS.put(StatusOrder.PENDING, Set.of(StatusOrder.IN_PROGRESS, StatusOrder.REJECTED));
         VALID_TRANSITIONS.put(StatusOrder.IN_PROGRESS, Set.of(StatusOrder.DISH_READY, StatusOrder.REJECTED));
-        VALID_TRANSITIONS.put(StatusOrder.DISH_READY, Set.of(StatusOrder.DISPATCHED, StatusOrder.REJECTED));
-        VALID_TRANSITIONS.put(StatusOrder.DISPATCHED, Set.of(StatusOrder.DELIVERED, StatusOrder.REJECTED));
+        VALID_TRANSITIONS.put(StatusOrder.DISH_READY, Set.of(StatusOrder.DELIVERED, StatusOrder.REJECTED));
         VALID_TRANSITIONS.put(StatusOrder.DELIVERED, Set.of());
         VALID_TRANSITIONS.put(StatusOrder.REJECTED, Set.of());
     }

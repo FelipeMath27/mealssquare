@@ -67,9 +67,16 @@ class OrderServiceTest {
          dish2 = new Dish(2L,"name",category,"cdsasa",7.0,restaurant,"ww.uno.com",StatusDish.ACT);
          dish3 = new Dish(3L,"name",category,"cdsasa",7.0,restaurant,"ww.uno.com",StatusDish.ACT);
 
-        order = new Order(1L,clientUser.getIdUser(),restaurant,
-                LocalDate.now(),null, List.of(new OrderDetail(1L,null,dish,1),
+        order = new Order(1L,
+                clientUser.getIdUser(),
+                null,
+                restaurant,
+                LocalDate.now(),
+                null,
+                List.of(new OrderDetail(1L,null,dish,1),
                 new OrderDetail(2L,null,dish2,2), new OrderDetail(3L,null,dish3,3)));
+
+
         when(iEmployeePersistencePort.findById(employeeUser.getIdUser())).thenReturn(Optional.ofNullable(employee));
     }
 
@@ -102,14 +109,14 @@ class OrderServiceTest {
 
     @Test
     void test_create_order_with_status_and_id_restaurant(){
-        Order order1 = new Order(1L,clientUser.getIdUser(),restaurant,LocalDate.now(),
+        Order order1 = new Order(1L,clientUser.getIdUser(),null,restaurant,LocalDate.now(),
                 StatusOrder.PENDING,List.of(new OrderDetail(1L,order,dish,1),
                 new OrderDetail(2L,order,dish2,2), new OrderDetail(3L,order,dish3,3)));
         Pagination pagination = new Pagination(0,10);
-        Order order2 = new Order(2L,clientUser.getIdUser(),restaurant,LocalDate.now(),
+        Order order2 = new Order(2L,clientUser.getIdUser(),null,restaurant,LocalDate.now(),
                 StatusOrder.PENDING,List.of(new OrderDetail(1L,order,dish,1),
                 new OrderDetail(2L,order,dish2,2), new OrderDetail(3L,order,dish3,3)));
-        Order order3 = new Order(3L,clientUser.getIdUser(),restaurant,LocalDate.now(),
+        Order order3 = new Order(3L,clientUser.getIdUser(),null,restaurant,LocalDate.now(),
                 StatusOrder.PENDING,List.of(new OrderDetail(1L,order,dish,1),
                 new OrderDetail(2L,order,dish2,2), new OrderDetail(3L,order,dish3,3)));
 
@@ -124,5 +131,44 @@ class OrderServiceTest {
 
         assertNotNull(result);
         assertEquals(3, result.content().size());
+    }
+
+    @Test
+    void test_assign_order_to_employee(){
+        when(iOrderPersistencePort.findById(1L)).thenReturn(Optional.of(order));
+        order.setStatusOrder(StatusOrder.PENDING);
+        when(iEmployeePersistencePort.findById(1L)).thenReturn(Optional.of(employee));
+        employee.setTypePositionEmployee(TypePositionEmployee.CASHIER);
+        useCaseOrder.updateOrderAssign(order.getIdOrder(), employeeUser.getIdUser());
+        verify(iOrderPersistencePort,times(1)).saveOrder(argThat(
+                updateAssignOrder ->
+                        updateAssignOrder.getIdEmployee().equals(employee.getIdEmployee())
+                        && StatusOrder.IN_PROGRESS.equals(updateAssignOrder.getStatusOrder())
+        ));
+    }
+
+    @Test
+    void test_assign_order_to_employee_with_invalid_status_should_throw_exception(){
+        order.setStatusOrder(StatusOrder.IN_PROGRESS);
+        when(iOrderPersistencePort.findById(1L)).thenReturn(Optional.of(order));
+        when(iEmployeePersistencePort.findById(1L)).thenReturn(Optional.of(employee));
+        DomainException exception = assertThrows(DomainException.class,
+                () -> useCaseOrder.updateOrderAssign(order.getIdOrder(), employeeUser.getIdUser()));
+        assertEquals(ConstantsErrorMessage.ORDER_CANNOT_BE_ASSIGNED, exception.getMessage());
+        verify(iOrderPersistencePort, never()).saveOrder(any(Order.class));
+    }
+
+    @Test
+    void test_update_order_status_to_get_pin(){
+        order.setStatusOrder(StatusOrder.DISH_READY);
+        when(iOrderPersistencePort.findById(1L)).thenReturn(Optional.of(order));
+        when(iEmployeePersistencePort.findById(1L)).thenReturn(Optional.of(employee));
+        order.setIdEmployee(employee.getIdEmployee());
+        useCaseOrder.updateStatusOrder(order.getIdOrder(), StatusOrder.DELIVERED,employee.getIdEmployee(),
+                "12341234", "12341234".describeConstable());
+        verify(iOrderPersistencePort,times(1)).saveOrder(argThat(
+                updateAssignOrder ->
+                        StatusOrder.DELIVERED.equals(updateAssignOrder.getStatusOrder())
+        ));
     }
 }

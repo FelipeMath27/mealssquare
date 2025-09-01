@@ -69,6 +69,7 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
 
     @Override
     public Optional<Order> findById(Long idOrder) {
-        return Optional.ofNullable(iOrderEntityMapper.toOrder(iOrderRepository.findById(idOrder).orElseThrow(() -> new CustomException(ConstantsErrorMessage.ORDER_NOT_FOUND))));
+        return iOrderRepository.findById(idOrder).
+                map(iOrderEntityMapper::toOrder);
     }
 }
