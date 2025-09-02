@@ -36,14 +36,14 @@ public class OrderRestController {
         return ResponseEntity.ok(iOrderHandler.getAllOrders(page,size,statusOrder,authentication.getName()));
     }
 
-    @PatchMapping
+    @PatchMapping("/assign-order")
     public ResponseEntity<OrderDTOResponse> assignOrderToEmployee(@RequestParam Long idOrder,
                                                                   Authentication authentication){
         log.info("{}",ConstantsErrorMessage.LISTENER_OK_CONTROLLER);
         return ResponseEntity.ok(iOrderHandler.assignOrderToEmployee(idOrder,authentication.getName()));
     }
 
-    @PatchMapping
+    @PatchMapping("/update-status-order")
     public ResponseEntity<OrderDTOResponse> updateStatusOrder(@RequestParam Long idOrder,
                                                               @RequestParam StatusOrder statusOrder,
                                                               @RequestParam String pin,

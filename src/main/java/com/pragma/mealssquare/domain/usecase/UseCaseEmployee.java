@@ -55,5 +55,9 @@ public class UseCaseEmployee implements IEmployeeServicePort {
                 .orElseThrow(() -> new DomainException(ConstantsErrorMessage.INCORRECT_OWNER_TO_CREATE_EMPLOYEE));
     }
 
-
+    @Override
+    public Employee getEmployeeByIdUser(Long idUser) {
+        return iEmployeePersistencePort.findByIdUser(idUser)
+                .orElseThrow(()-> new DomainException(ConstantsErrorMessage.EMPLOYEE_NOT_FOUND));
+    }
 }

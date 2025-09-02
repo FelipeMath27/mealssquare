@@ -10,10 +10,11 @@ import com.pragma.mealssquare.domain.spi.IEmployeePersistencePort;
 import com.pragma.mealssquare.domain.spi.IOrderPersistencePort;
 import com.pragma.mealssquare.domain.spi.IRestaurantPersistencePort;
 import com.pragma.mealssquare.domain.utils.ConstantsErrorMessage;
-import com.pragma.mealssquare.domain.validator.EmployeeOrder;
+import com.pragma.mealssquare.domain.validator.EmployeeOrderRecorder;
 import com.pragma.mealssquare.domain.validator.StatusOrderValidators;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -63,9 +64,9 @@ public class UseCaseOrder implements IOrderServicePort {
 
     @Override
     public Order updateOrderAssign(Long idOrder, Long idEmployee) {
-        EmployeeOrder validateEmployeeAndOrder = validateEmployeeAndOrder(idEmployee, idOrder);
-        final Employee employee = validateEmployeeAndOrder.employee();
-        final Order order = validateEmployeeAndOrder.order();
+        EmployeeOrderRecorder employeeOrderRecorder = validateOrderEmployee(idEmployee,idOrder);
+        final Employee employee = employeeOrderRecorder.employee();
+        final Order order = employeeOrderRecorder.order();
 
         if (order.getStatusOrder() != StatusOrder.PENDING) {
             throw new DomainException(ConstantsErrorMessage.ORDER_CANNOT_BE_ASSIGNED);
@@ -84,9 +85,9 @@ public class UseCaseOrder implements IOrderServicePort {
 
     @Override
     public Order updateStatusOrder(Long idOrder, StatusOrder statusOrder, Long idEmployee, String pin, Optional<String> responsePinOpt) {
-        EmployeeOrder validateEmployeeAndOrder = validateEmployeeAndOrder(idEmployee, idOrder);
-        final Order order = validateEmployeeAndOrder.order();
-        final Employee employee = validateEmployeeAndOrder.employee();
+        EmployeeOrderRecorder employeeOrderRecorder = validateOrderEmployee(idEmployee,idOrder);
+        final Employee employee = employeeOrderRecorder.employee();
+        final Order order = employeeOrderRecorder.order();
 
         if(!Objects.equals(order.getIdEmployee(), employee.getIdEmployee())){
             throw new DomainException(ConstantsErrorMessage.UNAUTHORIZED_OPERATION);
@@ -112,14 +113,15 @@ public class UseCaseOrder implements IOrderServicePort {
                 orElseThrow(()-> new DomainException(ConstantsErrorMessage.ORDER_NOT_FOUND));
     }
 
-    private EmployeeOrder validateEmployeeAndOrder(Long idEmployee, Long idOrder) {
-        Employee employee = iEmployeePersistencePort.findById(idEmployee)
+    private EmployeeOrderRecorder validateOrderEmployee(Long idEmployee, Long idOrder) {
+        Employee employee = iEmployeePersistencePort.findByIdUser(idEmployee)
                 .orElseThrow(() -> new DomainException(ConstantsErrorMessage.EMPLOYEE_NOT_FOUND));
         Order order = iOrderPersistencePort.findById(idOrder)
                 .orElseThrow(() -> new DomainException(ConstantsErrorMessage.ORDER_NOT_FOUND));
+        log.info(String.valueOf(order));
         if (!Objects.equals(order.getRestaurant().getIdRestaurant(), employee.getRestaurant().getIdRestaurant())) {
             throw new DomainException(ConstantsErrorMessage.ORDER_NOT_BELONG_TO_EMPLOYEE_RESTAURANT);
         }
-        return new EmployeeOrder(employee, order);
+        return new EmployeeOrderRecorder(order,employee);
     }
 }

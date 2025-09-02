@@ -32,7 +32,14 @@ public class EmployeeJpaAdapter implements IEmployeePersistencePort {
     }
 
     @Override
+    public Optional<Employee> findByIdUser(Long idUser) {
+        return iEmployeeRepository.findByIdUser(idUser)
+                .map(iEmployeeEntityMapper::toEmployee);
+    }
+
+    @Override
     public Optional<Employee> findById(Long idEmployee) {
-        return Optional.empty();
+        return iEmployeeRepository.findById(idEmployee)
+                .map(iEmployeeEntityMapper::toEmployee);
     }
 }

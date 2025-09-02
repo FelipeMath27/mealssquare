@@ -4,8 +4,10 @@ import com.pragma.mealssquare.application.dto.*;
 import com.pragma.mealssquare.application.mapper.IOrderDetailRequestMapper;
 import com.pragma.mealssquare.application.mapper.IOrderRequestMapper;
 import com.pragma.mealssquare.application.mapper.IOrderResponseMapper;
+import com.pragma.mealssquare.domain.api.IEmployeeServicePort;
 import com.pragma.mealssquare.domain.api.IOrderServicePort;
 import com.pragma.mealssquare.domain.exception.DomainException;
+import com.pragma.mealssquare.domain.model.Employee;
 import com.pragma.mealssquare.domain.model.Order;
 import com.pragma.mealssquare.domain.model.OrderDetail;
 import com.pragma.mealssquare.domain.model.StatusOrder;
@@ -33,12 +35,15 @@ public class OrderHandler implements IOrderHandler{
     private final IOrderDetailRequestMapper iOrderDetailRequestMapper;
     private final ITraceabilityFeignHandler iTraceabilityFeignHandler;
     private final INotificationFeignSMSHandler iNotificationFeignSMSHandler;
+    private final IEmployeeServicePort iEmployeeServicePort;
 
-    private UserDTOResponse userDTOResponse;
+    private UserDTOResponse employeeDTOResponse;
+    private UserDTOResponse clientDTOResponse;
     private TraceabilityDTORequest traceabilityDTORequest;
     private NotificationDTOResponse notificationDTOResponse;
     private NotificationDTORequest notificationDTORequest;
-    OrderDTOResponse orderDTOResponse, updateOrderDTOResponse;
+    OrderDTOResponse orderDTOResponse;
+    OrderDTOResponse updateOrderDTOResponse;
 
     @Override
     public OrderDTOResponse saveOrder(OrderDTORequest orderDTORequest) {
@@ -47,16 +52,15 @@ public class OrderHandler implements IOrderHandler{
             if (orderDTORequest.getIdClient() == null) {
                 throw new DomainException(ConstantsErrorMessage.CANT_BE_NULL);
             }
-            userDTOResponse = iUserFeignHandler.getUserById(orderDTORequest.getIdClient());
+            employeeDTOResponse = iUserFeignHandler.getUserById(orderDTORequest.getIdClient());
             List<OrderDetail> orderDetailList = orderDTORequest.getOrderDetailList()
                     .stream()
                     .map(iOrderDetailRequestMapper::toOrderDetail)
                     .peek(orderDetail -> orderDetail.setOrder(order))
                     .toList();
             order.setOrderDetailList(orderDetailList);
-            OrderDTOResponse orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.saveOrder(order, userDTOResponse.getIdUser()));
-            orderDTOResponse.setClientDTOResponse(userDTOResponse);
-            iTraceabilityFeignHandler.writeTraceability(buildTraceabilityDTORequest(orderDTOResponse));
+            OrderDTOResponse orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.saveOrder(order, employeeDTOResponse.getIdUser()));
+            orderDTOResponse.setClientDTOResponse(employeeDTOResponse);
             return orderDTOResponse;
         } catch (UsernameNotFoundException ex){
             throw new DomainException(ConstantsErrorMessage.USER_NOT_FOUD + "{}" + ex);
@@ -67,8 +71,8 @@ public class OrderHandler implements IOrderHandler{
     public PageDTOResponse<OrderDTOResponse> getAllOrders(int page, int size, StatusOrder statusOrder, String email) {
         try {
             Pagination pagination = new Pagination(page,size);
-            userDTOResponse = iUserFeignHandler.getUserByEmail(email);
-            Long idEmployee = userDTOResponse.getIdUser();
+            employeeDTOResponse = iUserFeignHandler.getUserByEmail(email);
+            Long idEmployee = employeeDTOResponse.getIdUser();
             PageResult<Order> pageResult = iOrderServicePort.getOrderListByStatus(idEmployee,statusOrder,pagination);
             return new PageDTOResponse<>(
                     iOrderResponseMapper.toOrderDtoList(pageResult.content()),
@@ -85,10 +89,15 @@ public class OrderHandler implements IOrderHandler{
     @Override
     public OrderDTOResponse  assignOrderToEmployee(Long idOrder, String email) {
         try {
-            userDTOResponse = iUserFeignHandler.getUserByEmail(email);
-            Long idEmployee = userDTOResponse.getIdUser();
-            orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.updateOrderAssign(idOrder,idEmployee));
-            iTraceabilityFeignHandler.writeTraceability(buildTraceabilityDTORequest(orderDTOResponse));
+            employeeDTOResponse = iUserFeignHandler.getUserByEmail(email);
+            Long idEmployee = employeeDTOResponse.getIdUser();
+            log.info(String.valueOf(employeeDTOResponse));
+            Order order = iOrderServicePort.updateOrderAssign(idOrder,idEmployee);
+            clientDTOResponse = iUserFeignHandler.getUserById(order.getIdClient());
+            orderDTOResponse = iOrderResponseMapper.toResponse(order);
+            orderDTOResponse.setClientDTOResponse(clientDTOResponse);
+            orderDTOResponse.setEmployeeDTOResponse(employeeDTOResponse);
+            iTraceabilityFeignHandler.writeTraceability(buildTraceabilityDTORequest(orderDTOResponse,employeeDTOResponse));
             return orderDTOResponse;
         } catch (UsernameNotFoundException ex){
             throw new DomainException(ConstantsErrorMessage.USER_NOT_FOUD + "{}" + ex);
@@ -96,35 +105,39 @@ public class OrderHandler implements IOrderHandler{
     }
 
     @Override
-    public OrderDTOResponse updateStatusOrder(Long idOrder, StatusOrder statusOrder, String name, String pin ) {
+    public OrderDTOResponse updateStatusOrder(Long idOrder, StatusOrder statusOrder, String email, String pin) {
         try {
-            userDTOResponse = iUserFeignHandler.getUserByEmail(name);
-            orderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.getOrderById(idOrder));
-            notificationDTORequest.setPhoneNumber(orderDTOResponse.getClientDTOResponse().getPhoneNumberUser());
-            if (StatusOrder.DISH_READY.equals(orderDTOResponse.getStatusOrder())){
+            Order orderUpdated;
+            employeeDTOResponse = iUserFeignHandler.getUserByEmail(email);
+            Order order = iOrderServicePort.getOrderById(idOrder);
+            clientDTOResponse = iUserFeignHandler.getUserById(order.getIdClient());
+            if (StatusOrder.DISH_READY.equals(statusOrder)){
+                notificationDTORequest.setPhoneNumber(clientDTOResponse.getPhoneNumberUser());
                 String responsePin = iNotificationFeignSMSHandler.sendSMS(notificationDTORequest).getPin();
-                updateOrderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.updateStatusOrder(orderDTOResponse.getIdOrder(),
-                        statusOrder,userDTOResponse.getIdUser(),pin, Optional.of(responsePin)));
+                orderUpdated = iOrderServicePort.updateStatusOrder(order.getIdOrder(),statusOrder,employeeDTOResponse.getIdUser(),pin,Optional.of(responsePin));
             } else {
-                updateOrderDTOResponse = iOrderResponseMapper.toResponse(iOrderServicePort.updateStatusOrder(orderDTOResponse.getIdOrder(),
-                        statusOrder,userDTOResponse.getIdUser(),pin, Optional.empty()));
+                orderUpdated = iOrderServicePort.updateStatusOrder(orderDTOResponse.getIdOrder(),
+                        statusOrder,employeeDTOResponse.getIdUser(),pin, Optional.empty());
             }
-            iTraceabilityFeignHandler.writeTraceability(buildTraceabilityDTORequest(orderDTOResponse));
+            updateOrderDTOResponse = iOrderResponseMapper.toResponse(orderUpdated);
+            updateOrderDTOResponse.setClientDTOResponse(clientDTOResponse);
+            updateOrderDTOResponse.setEmployeeDTOResponse(employeeDTOResponse);
+            iTraceabilityFeignHandler.writeTraceability(buildTraceabilityDTORequest(orderDTOResponse,employeeDTOResponse));
             return orderDTOResponse;
         } catch (UsernameNotFoundException ex){
             throw new DomainException(ConstantsErrorMessage.USER_NOT_FOUD + "{}" + ex);
         }
     }
 
-    private TraceabilityDTORequest buildTraceabilityDTORequest(OrderDTOResponse orderDTOResponse) {
+    private TraceabilityDTORequest buildTraceabilityDTORequest(OrderDTOResponse orderDTOResponse, UserDTOResponse userDTOResponse) {
         log.info(ConstantsErrorMessage.BUILDING_TRACEABILITY_DTO_REQUEST);
         return TraceabilityDTORequest.builder()
                 .idOrder(orderDTOResponse.getIdOrder())
                 .idClient(orderDTOResponse.getClientDTOResponse().getIdUser())
                 .emailClient(orderDTOResponse.getClientDTOResponse().getEmail())
                 .newStatus(orderDTOResponse.getStatusOrder())
-                .idEmployee(orderDTOResponse.getEmployeeDTOResponse().getIdUser())
-                .emailEmployee(orderDTOResponse.getEmployeeDTOResponse().getEmail())
+                .idEmployee(userDTOResponse.getIdUser())
+                .emailEmployee(userDTOResponse.getEmail())
                 .build();
     }
 }

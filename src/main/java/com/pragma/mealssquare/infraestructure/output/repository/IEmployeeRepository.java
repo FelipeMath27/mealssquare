@@ -10,4 +10,6 @@ public interface IEmployeeRepository extends JpaRepository<EmployeeEntity,Long> 
     @NonNull
     Optional<EmployeeEntity> findById(@NonNull Long idEmployee);
 
+    @NonNull
+    Optional<EmployeeEntity> findByIdUser(@NonNull Long idUser);
 }
